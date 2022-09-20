@@ -3,11 +3,24 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider as UrqlProvider, createClient, defaultExchanges } from "urql";
-//import { List } from "./pages/Galaxy";
+import { ListGalaxies } from "./pages/Galaxy";
+import { Amplify } from '@aws-amplify/core';
 
 const urql = createClient({
   url: import.meta.env.VITE_GRAPHQL_URL,
   exchanges: defaultExchanges
+});
+
+Amplify.configure({
+  API: {
+    endpoints: [
+      {
+        name: "galaxyGenerator",
+        endpoint: import.meta.env.VITE_GENERATE_URL,
+        region: import.meta.env.VITE_GENERATE_REGION
+      }
+    ]
+  }
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -19,12 +32,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 );
 
 function App() {
-  return (/*
+  return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/galaxies" />} />
-        <Route path="galaxies" element={<List />} />
+        <Route path="galaxies" element={<ListGalaxies />} />
       </Routes>
-    </BrowserRouter>*/
+    </BrowserRouter>
   );
 }

@@ -1,0 +1,1 @@
+export const surveyNames = ['Wolf', 'Kepler', 'Trappist', 'Wasp', 'Corot', 'Hat-P', 'HD', 'Copernicus', 'Nostradamus'];

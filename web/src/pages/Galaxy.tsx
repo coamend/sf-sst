@@ -1,10 +1,17 @@
 import { useTypedMutation, useTypedQuery } from "../urql";
+import { API as amplify } from "@aws-amplify/api";
 
 interface GalaxyForm {
   galaxyName: string;
 }
 
-export function List() {
+function createGalaxy(opts: GalaxyForm) {
+  return amplify.post("galaxyGenerator", "", {
+    body: opts
+  });
+}
+
+export function ListGalaxies() {
   const [galaxies] = useTypedQuery({
     query: {
       galaxies: {
@@ -13,15 +20,6 @@ export function List() {
       }
     }
   });
-
-  const [, createGalaxy] = useTypedMutation((opts: GalaxyForm) => ({
-    createGalaxy: [
-      opts,
-      {
-        galaxyName: true
-      }
-    ]
-  }));
 
   return (
     <div style={{ padding: "1rem" }}>
@@ -46,7 +44,7 @@ export function List() {
           <li>
             <div>
               <div>
-                {galaxy.title} - <a href={galaxy.url}>{galaxy.url}</a>
+                {galaxy.galaxyName} - <a href={galaxy.galaxyID}>{galaxy.galaxyID}</a>
               </div>
             </div>
           </li>

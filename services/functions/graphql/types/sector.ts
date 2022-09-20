@@ -22,7 +22,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  sectors: t.field({
+  sectorsByQuadrant: t.field({
     type: [SectorType],
     args: {
       galaxyID: t.arg.string({ required: true }),

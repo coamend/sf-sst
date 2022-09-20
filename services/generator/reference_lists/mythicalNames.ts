@@ -1,0 +1,1 @@
+export const mythicalNames = ['Mercury', 'Venus', 'Terra', 'Sol', 'Mars', 'Jupiter', 'Uranus', 'Saturn', 'Neptune', 'Pluto', 'Deimos', 'Phobos', 'Titan', 'Ceres', 'Vespa'];

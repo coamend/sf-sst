@@ -31,7 +31,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  systems: t.field({
+  systemsByQuadrant: t.field({
     type: [SystemType],
     args: {
       galaxyID: t.arg.string({ required: true }),
@@ -43,7 +43,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  systems: t.field({
+  systemsBySector: t.field({
     type: [SystemType],
     args: {
       galaxyID: t.arg.string({ required: true }),
@@ -57,7 +57,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  systems: t.field({
+  systemsBySubsector: t.field({
     type: [SystemType],
     args: {
       galaxyID: t.arg.string({ required: true }),

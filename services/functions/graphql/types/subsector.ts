@@ -22,7 +22,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  subsectors: t.field({
+  subsectorsByQuadrant: t.field({
     type: [SubsectorType],
     args: {
       galaxyID: t.arg.string({ required: true }),
@@ -34,7 +34,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  subsectors: t.field({
+  subsectorsBySector: t.field({
     type: [SubsectorType],
     args: {
       galaxyID: t.arg.string({ required: true }),

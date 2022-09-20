@@ -1,7 +1,7 @@
 import { StackContext, use, ViteStaticSite } from "@serverless-stack/resources";
 import { Api } from "./Api";
 
-export function Web({ stack }: StackContext) {
+export function Web({ stack, app }: StackContext) {
   const api = use(Api);
 
   const site = new ViteStaticSite(stack, "site", {
@@ -9,6 +9,8 @@ export function Web({ stack }: StackContext) {
     buildCommand: "npm run build",
     environment: {
       VITE_GRAPHQL_URL: api.url + "/graphql",
+      VITE_GENERATE_URL: api.url + "/generateGalaxy",
+      VITE_GENERATE_REGION: app.region
     },
   });
 

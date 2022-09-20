@@ -16,7 +16,7 @@ export function Api({ stack }: StackContext) {
           TABLE_NAME: db.tableName,
         },
       },
-    },
+    }, 
     routes: {
       "POST /graphql": {
         type: "pothos",

@@ -27,7 +27,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  ores: t.field({
+  oresByQuadrant: t.field({
     type: [OreType],
     args: {
       galaxyID: t.arg.string({ required: true }),
@@ -39,7 +39,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  ores: t.field({
+  oresBySector: t.field({
     type: [OreType],
     args: {
       galaxyID: t.arg.string({ required: true }),
@@ -53,7 +53,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  ores: t.field({
+  oresBySubsector: t.field({
     type: [OreType],
     args: {
       galaxyID: t.arg.string({ required: true }),
@@ -69,7 +69,7 @@ builder.queryFields(t => ({
 }));
 
 builder.queryFields(t => ({
-  ores: t.field({
+  oresBySystem: t.field({
     type: [OreType],
     args: {
       galaxyID: t.arg.string({ required: true }),
