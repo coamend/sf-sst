@@ -66,11 +66,27 @@ export const SystemEntity = new Entity(
       parentSystemID: {
         type: "string",
         label: "parentsys",
-        required: true,
         readOnly: true,
+      },
+      binarySystemType: {
+        type: "string",
+        label: "systype",
+      },
+      binaryMinimumDistance: {
+        type: "number",
+        field: "minDist",
       },
       binaryAverageDistance: {
         type: "number",
+        field: "avgDist",
+      },
+      binaryMaximumDistance: {
+        type: "number",
+        field: "maxDist",
+      },
+      binaryEccentricity: {
+        type: "number",
+        field: "ecc",
       },
       barycenter: {
         type: "number",
@@ -142,7 +158,11 @@ export function create(
   subsectorY: number, 
   systemName: string, 
   parentSystemID?: string,
+  binarySystemType?: string,
+  binaryMinimumDistance?: number,
   binaryAverageDistance?: number,
+  binaryMaximumDistance?: number,
+  binaryEccentricity?: number,
   barycenter?: number,
   innerOrbitLimit?: number,
   outerOrbitLimit?: number,
@@ -170,7 +190,11 @@ export function create(
     systemID,
     systemName,
     parentSystemID,
+    binarySystemType,
+    binaryMinimumDistance,
     binaryAverageDistance,
+    binaryMaximumDistance,
+    binaryEccentricity,
     barycenter,
     innerOrbitLimit,
     outerOrbitLimit,

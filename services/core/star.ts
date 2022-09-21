@@ -67,26 +67,6 @@ export const StarEntity = new Entity(
         type: "string",
         required: true,
       },
-      minimumDistance: {
-        type: "number",
-        field: "minDist",
-        required: false,
-      },
-      averageDistance: {
-        type: "number",
-        field: "avgDist",
-        required: false,
-      },
-      maximumDistance: {
-        type: "number",
-        field: "maxDist",
-        required: false,
-      },
-      eccentricity: {
-        type: "number",
-        field: "ecc",
-        required: false,
-      },
       luminosity: {
         type: "number",
         field: "lux",
@@ -156,10 +136,6 @@ export function create(
   diameter: number,
   surfaceTemperature: number,
   spectralClass: string,
-  minimumDistance?: number,
-  averageDistance?: number,
-  maximumDistance?: number,
-  eccentricity?: number,
   ) {
   const starID = ulid();
 
@@ -179,10 +155,6 @@ export function create(
     diameter,
     surfaceTemperature,
     spectralClass,
-    minimumDistance,
-    averageDistance,
-    maximumDistance,
-    eccentricity,
   }).go();
 }
 

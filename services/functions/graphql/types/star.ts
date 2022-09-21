@@ -12,11 +12,7 @@ const StarType = builder
       mass: t.exposeFloat("mass"),
       diameter: t.exposeFloat("diameter"),
       surfaceTemperature: t.exposeFloat("surfaceTemperature"),
-      spectralClass: t.exposeString("spectralClass", { nullable: true }),
-      minimumDistance: t.exposeFloat("minimumDistance", { nullable: true }),
-      averageDistance: t.exposeFloat("averageDistance", { nullable: true }),
-      maximumDistance: t.exposeFloat("maximumDistance", { nullable: true }),
-      eccentricity: t.exposeFloat("eccentricity", { nullable: true })
+      spectralClass: t.exposeString("spectralClass", { nullable: true })
     })
   });
 
@@ -107,10 +103,6 @@ builder.mutationFields(t => ({
       diameter: t.arg.float({ required: true }),
       surfaceTemperature: t.arg.float({ required: true }),
       spectralClass: t.arg.string({ required: true }),
-      minimumDistance: t.arg.float(),
-      averageDistance: t.arg.float(),
-      maximumDistance: t.arg.float(),
-      eccentricity: t.arg.float()
     },
     resolve: async (_, args) => Star.create(
       args.galaxyID, 
@@ -127,10 +119,6 @@ builder.mutationFields(t => ({
       args.diameter,
       args.surfaceTemperature,
       args.spectralClass,
-      args.minimumDistance??undefined,
-      args.averageDistance??undefined,
-      args.maximumDistance??undefined,
-      args.eccentricity??undefined
       )
   })
 }));

@@ -1,4 +1,5 @@
 import { System } from "@sf-sst/core/system";
+import { UniqueFieldDefinitionNamesRule } from "graphql";
 import { builder } from "../builder";
 
 const SystemType = builder
@@ -7,8 +8,12 @@ const SystemType = builder
     fields: t => ({
       systemID: t.exposeID("systemID"),
       systemName: t.exposeString("systemName"),
-      parentSystemID: t.exposeString("parentSystemID"),
+      parentSystemID: t.exposeString("parentSystemID", { nullable: true }),
+      binarySystemType: t.exposeString("binarySystemType", { nullable: true }),
+      binaryMinimumDistance: t.exposeFloat("binaryMinimumDistance", { nullable: true }),
       binaryAverageDistance: t.exposeFloat("binaryAverageDistance", { nullable: true }),
+      binaryMaximumDistance: t.exposeFloat("binaryMaximumDistance", { nullable: true }),
+      binaryEccentricity: t.exposeFloat("binaryEccentricity", { nullable: true }),
       barycenter: t.exposeFloat("barycenter", { nullable: true }),
       innerOrbitLimit: t.exposeFloat("innerOrbitLimit", { nullable: true }),
       outerOrbitLimit: t.exposeFloat("outerOrbitLimit", { nullable: true }),
@@ -85,7 +90,11 @@ builder.mutationFields(t => ({
       subsectorY: t.arg.int({ required: true }),
       systemName: t.arg.string({ required: true }),
       parentSystemID: t.arg.string(),
+      binarySystemType: t.arg.string(),
+      binaryMinimumDistance: t.arg.float(),
       binaryAverageDistance: t.arg.float(),
+      binaryMaximumDistance: t.arg.float(),
+      binaryEccentricity: t.arg.float(),
       barycenter: t.arg.float(),
       innerOrbitLimit: t.arg.float(),
       outerOrbitLimit: t.arg.float(),
@@ -105,7 +114,11 @@ builder.mutationFields(t => ({
       args.subsectorY, 
       args.systemName,
       args.parentSystemID??undefined,
+      args.binarySystemType??undefined,
+      args.binaryMinimumDistance??undefined,
       args.binaryAverageDistance??undefined,
+      args.binaryMaximumDistance??undefined,
+      args.binaryEccentricity??undefined,
       args.barycenter??undefined,
       args.innerOrbitLimit??undefined,
       args.outerOrbitLimit??undefined,

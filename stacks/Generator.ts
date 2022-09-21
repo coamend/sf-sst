@@ -14,7 +14,9 @@ export function Generator({ stack }: StackContext) {
             handler: "services/generator/generateSystem.main",
             timeout: 20,
             environment: {
-              GRAPHQL_URL: api.url + "/graphql"
+              GRAPHQL_URL: api.url + "/graphql",
+              MULTI_STAR_SYSYEM_PROBABILITY: '0.08',
+              P_TYPE_MULTI_SYSTEM_PROBABILITY: '0.5',
             }
         }
     }

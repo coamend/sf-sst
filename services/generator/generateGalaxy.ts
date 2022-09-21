@@ -30,7 +30,7 @@ export async function main(
     params.sectorSizeY = params.sectorSizeY ?? 2;
     params.subsectorSizeX = params.subsectorSizeX ?? 2;
     params.subsectorSizeY = params.subsectorSizeY ?? 2;
-    params.systemFrequency = params.systemFrequency ?? 0.3;
+    params.systemFrequency = params.systemFrequency ?? 0.08;
 
     let client = createClient({ url: process.env.GRAPHQL_URL });
     let galaxyID = (await client.mutation({createGalaxy: [{ galaxyName: params.galaxyName }, { galaxyID: true }]})).createGalaxy.galaxyID;
