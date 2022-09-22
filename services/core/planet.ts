@@ -59,6 +59,10 @@ export const PlanetEntity = new Entity(
         required: true,
         readOnly: true,
       },
+      starID: {
+        type: "string",
+        readOnly: true,
+      },
       planetID: {
         type: "string",
         required: true,
@@ -123,7 +127,7 @@ export const PlanetEntity = new Entity(
         },
         sk: {
           field: "gsi1sk",
-          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX, subsectorY", "systemID"],
+          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX, subsectorY", "systemID", "starID"],
         }
       }
     },
@@ -151,6 +155,7 @@ export function create(
   surfaceArea: number,
   axialTilt: number,
   averageTemperature: number,
+  starID?: string,
   parentPlanetID?: string,
   ) {
   const planetID = ulid();
@@ -167,6 +172,7 @@ export function create(
     subsectorX,
     subsectorY,
     systemID,
+    starID,
     planetID,
     planetName,
     parentPlanetID,
@@ -201,3 +207,6 @@ export async function listBySystem(galaxyID: string, quadrantX: number, quadrant
   return PlanetEntity.query.galacticObjects({galaxyID, quadrantX, quadrantY, sectorX, sectorY, subsectorX, subsectorY, systemID}).go();
 }
 
+export async function listByStar(galaxyID: string, quadrantX: number, quadrantY: number, sectorX: number, sectorY: number, subsectorX: number, subsectorY: number, systemID: string, starID: string) {
+  return PlanetEntity.query.galacticObjects({galaxyID, quadrantX, quadrantY, sectorX, sectorY, subsectorX, subsectorY, systemID, starID}).go();
+}

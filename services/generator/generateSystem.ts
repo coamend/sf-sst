@@ -1,8 +1,29 @@
 import { createClient } from "../../graphql/genql";
-import { SQSEvent } from "aws-lambda";
+import { SQSEvent, SQSRecord } from "aws-lambda";
 
 
 export async function main(event: SQSEvent) {
+    const batchItemFailures = new Array;
+
+    await Promise.allSettled(
+        event.Records.map(async (record: SQSRecord) => {
+        const body = record.body;
+        try {
+            generateSystem(body);
+        }
+        catch(e) {
+          console.log(`Error while generating system: ${body}`);
+          batchItemFailures.push({itemIdentifier: record.messageId});
+        }
+      })
+    );
+
+    console.log('Successfully created ' + event.Records.length.toString() + ' systems');
+
+    return {batchItemFailures};
+};
+
+async function generateSystem(message) {
     try{
         let client = createClient({ url: process.env.GRAPHQL_URL });
     }
@@ -12,68 +33,63 @@ export async function main(event: SQSEvent) {
         throw(e);
     }
 
-    for(const { messageId, body } of event.Records)
-    {
-        try{
-            if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
+    try{
+        if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
+        {
+            //Multi-star system
+            let primarySystemType: string;
+            let secondarySystemType: string;
+            let numStars: number = 2;
+
+            if(Math.random() <= Number(process.env.P_TYPE_MULTI_SYSTEM_PROBABILITY))
             {
-                //Multi-star system
-                let primarySystemType: string;
-                let secondarySystemType: string;
-                let numStars: number = 2;
-
-                if(Math.random() <= Number(process.env.P_TYPE_MULTI_SYSTEM_PROBABILITY))
-                {
-                    primarySystemType = 'P';
-                }
-                else
-                {
-                    primarySystemType = 'S';
-                }
-
-                if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
-                {
-                    //Trinary system
-                    numStars = 3;
-
-                    if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
-                    {
-                        //Quad system
-                        numStars = 4;
-
-                        if(Math.random() <= Number(process.env.P_TYPE_MULTI_SYSTEM_PROBABILITY))
-                        {
-                            secondarySystemType = 'P';
-                        }
-                        else
-                        {
-                            secondarySystemType = 'S';
-                        }
-                    }
-                }
-
-                //If 2 systems, create parent system
-                //Create system 1
-                //Create system 1 stars
-                //Create system 2
-                //Create system 2 stars
-                //Update parent system barycenter, distance
+                primarySystemType = 'P';
             }
             else
             {
-                //Single star system
+                primarySystemType = 'S';
             }
-            //Need to make sure that creation checks to make sure it doesn't already exist
-            //Generate planets
-            //Generate moons
-            //Generate ores
+
+            if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
+            {
+                //Trinary system
+                numStars = 3;
+
+                if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
+                {
+                    //Quad system
+                    numStars = 4;
+
+                    if(Math.random() <= Number(process.env.P_TYPE_MULTI_SYSTEM_PROBABILITY))
+                    {
+                        secondarySystemType = 'P';
+                    }
+                    else
+                    {
+                        secondarySystemType = 'S';
+                    }
+                }
+            }
+
+            //If 2 systems, create parent system
+            //Create system 1
+            //Create system 1 stars
+            //Create system 2
+            //Create system 2 stars
+            //Update parent system barycenter, distance
         }
-        catch (e) {
-            console.log("Failed to generate system: %s %j", messageId, body )
-            //mark as failed to process, clean up
-            throw(e);
+        else
+        {
+            //Single star system
         }
+        //Need to make sure that creation checks to make sure it doesn't already exist
+        //Generate planets
+        //Generate moons
+        //Generate ores
     }
-    
-    return 'Successfully created ' + event.Records.length.toString() + ' systems';
-};
+    catch (e) {
+        console.log("Failed to generate system: %j", message );
+        //mark as failed to process, clean up
+        throw(e);
+    }
+}

@@ -18,6 +18,11 @@ export function Generator({ stack }: StackContext) {
               MULTI_STAR_SYSYEM_PROBABILITY: '0.08',
               P_TYPE_MULTI_SYSTEM_PROBABILITY: '0.5',
             }
+        },
+        cdk: {
+          eventSource: {
+            reportBatchItemFailures: true
+          }
         }
     }
   });
