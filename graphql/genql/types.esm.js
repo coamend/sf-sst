@@ -149,6 +149,9 @@ export default {
                         5,
                         "Int!"
                     ],
+                    "starID": [
+                        2
+                    ],
                     "subsectorX": [
                         5,
                         "Int!"
@@ -220,15 +223,9 @@ export default {
             "createStar": [
                 11,
                 {
-                    "averageDistance": [
-                        4
-                    ],
                     "diameter": [
                         4,
                         "Float!"
-                    ],
-                    "eccentricity": [
-                        4
                     ],
                     "galaxyID": [
                         2,
@@ -241,12 +238,6 @@ export default {
                     "mass": [
                         4,
                         "Float!"
-                    ],
-                    "maximumDistance": [
-                        4
-                    ],
-                    "minimumDistance": [
-                        4
                     ],
                     "quadrantX": [
                         5,
@@ -336,6 +327,15 @@ export default {
                     "binaryAverageDistance": [
                         4
                     ],
+                    "binaryEccentricity": [
+                        4
+                    ],
+                    "binaryMaximumDistance": [
+                        4
+                    ],
+                    "binaryMinimumDistance": [
+                        4
+                    ],
                     "forbiddenZoneInner": [
                         4
                     ],
@@ -387,6 +387,59 @@ export default {
                     "subsectorY": [
                         5,
                         "Int!"
+                    ],
+                    "systemName": [
+                        2,
+                        "String!"
+                    ]
+                }
+            ],
+            "updateSystem": [
+                13,
+                {
+                    "barycenter": [
+                        4
+                    ],
+                    "binaryAverageDistance": [
+                        4
+                    ],
+                    "binaryEccentricity": [
+                        4
+                    ],
+                    "binaryMaximumDistance": [
+                        4
+                    ],
+                    "binaryMinimumDistance": [
+                        4
+                    ],
+                    "forbiddenZoneInner": [
+                        4
+                    ],
+                    "forbiddenZoneOuter": [
+                        4
+                    ],
+                    "frostLine": [
+                        4
+                    ],
+                    "galaxyID": [
+                        2,
+                        "String!"
+                    ],
+                    "habitableZoneInner": [
+                        4
+                    ],
+                    "habitableZoneOuter": [
+                        4
+                    ],
+                    "innerOrbitLimit": [
+                        4
+                    ],
+                    "outerOrbitLimit": [
+                        4
+                    ],
+                    "systemID": [
+                        2,
+                        "String!"
                     ],
                     "systemName": [
                         2,
@@ -459,6 +512,9 @@ export default {
             ],
             "radius": [
                 4
+            ],
+            "starID": [
+                2
             ],
             "surfaceArea": [
                 4
@@ -657,6 +713,47 @@ export default {
                     "sectorY": [
                         5,
                         "Int!"
+                    ]
+                }
+            ],
+            "planetsByStar": [
+                7,
+                {
+                    "galaxyID": [
+                        2,
+                        "String!"
+                    ],
+                    "quadrantX": [
+                        5,
+                        "Int!"
+                    ],
+                    "quadrantY": [
+                        5,
+                        "Int!"
+                    ],
+                    "sectorX": [
+                        5,
+                        "Int!"
+                    ],
+                    "sectorY": [
+                        5,
+                        "Int!"
+                    ],
+                    "starID": [
+                        2,
+                        "String!"
+                    ],
+                    "subsectorX": [
+                        5,
+                        "Int!"
+                    ],
+                    "subsectorY": [
+                        5,
+                        "Int!"
+                    ],
+                    "systemID": [
+                        2,
+                        "String!"
                     ]
                 }
             ],
@@ -1040,25 +1137,13 @@ export default {
             ]
         },
         "Star": {
-            "averageDistance": [
-                4
-            ],
             "diameter": [
-                4
-            ],
-            "eccentricity": [
                 4
             ],
             "luminosity": [
                 4
             ],
             "mass": [
-                4
-            ],
-            "maximumDistance": [
-                4
-            ],
-            "minimumDistance": [
                 4
             ],
             "spectralClass": [
@@ -1099,6 +1184,15 @@ export default {
                 4
             ],
             "binaryAverageDistance": [
+                4
+            ],
+            "binaryEccentricity": [
+                4
+            ],
+            "binaryMaximumDistance": [
+                4
+            ],
+            "binaryMinimumDistance": [
                 4
             ],
             "forbiddenZoneInner": [

@@ -23,6 +23,7 @@ export interface Mutation {
     createStar: Star
     createSubsector: Subsector
     createSystem: System
+    updateSystem: System
     __typename: 'Mutation'
 }
 
@@ -49,6 +50,7 @@ export interface Planet {
     planetID: Scalars['ID']
     planetName: Scalars['String']
     radius: Scalars['Float']
+    starID?: Scalars['String']
     surfaceArea: Scalars['Float']
     systemID: Scalars['String']
     __typename: 'Planet'
@@ -71,6 +73,7 @@ export interface Query {
     planets: Planet[]
     planetsByQuadrant: Planet[]
     planetsBySector: Planet[]
+    planetsByStar: Planet[]
     planetsBySubsector: Planet[]
     planetsBySystem: Planet[]
     quadrants: Quadrant[]
@@ -99,13 +102,9 @@ export interface Sector {
 }
 
 export interface Star {
-    averageDistance?: Scalars['Float']
     diameter: Scalars['Float']
-    eccentricity?: Scalars['Float']
     luminosity: Scalars['Float']
     mass: Scalars['Float']
-    maximumDistance?: Scalars['Float']
-    minimumDistance?: Scalars['Float']
     spectralClass?: Scalars['String']
     starID: Scalars['ID']
     starName: Scalars['String']
@@ -124,6 +123,9 @@ export interface Subsector {
 export interface System {
     barycenter?: Scalars['Float']
     binaryAverageDistance?: Scalars['Float']
+    binaryEccentricity?: Scalars['Float']
+    binaryMaximumDistance?: Scalars['Float']
+    binaryMinimumDistance?: Scalars['Float']
     forbiddenZoneInner?: Scalars['Float']
     forbiddenZoneOuter?: Scalars['Float']
     frostLine?: Scalars['Float']
@@ -131,7 +133,7 @@ export interface System {
     habitableZoneOuter?: Scalars['Float']
     innerOrbitLimit?: Scalars['Float']
     outerOrbitLimit?: Scalars['Float']
-    parentSystemID: Scalars['String']
+    parentSystemID?: Scalars['String']
     systemID: Scalars['ID']
     systemName: Scalars['String']
     __typename: 'System'
@@ -147,12 +149,13 @@ export interface GalaxyRequest{
 export interface MutationRequest{
     createGalaxy?: [{galaxyName: Scalars['String']},GalaxyRequest]
     createOre?: [{depth: Scalars['Float'],galaxyID: Scalars['String'],oreType: Scalars['String'],parentObjectID: Scalars['String'],parentObjectType: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],size: Scalars['Float'],stripRatio: Scalars['Float'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']},OreRequest]
-    createPlanet?: [{averageOrbit: Scalars['Float'],averageTemperature: Scalars['Float'],axialTilt: Scalars['Float'],density: Scalars['Float'],eccentricity: Scalars['Float'],galaxyID: Scalars['String'],mass: Scalars['Float'],parentPlanetID?: (Scalars['String'] | null),planetName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],radius: Scalars['Float'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceArea: Scalars['Float'],systemID: Scalars['String']},PlanetRequest]
+    createPlanet?: [{averageOrbit: Scalars['Float'],averageTemperature: Scalars['Float'],axialTilt: Scalars['Float'],density: Scalars['Float'],eccentricity: Scalars['Float'],galaxyID: Scalars['String'],mass: Scalars['Float'],parentPlanetID?: (Scalars['String'] | null),planetName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],radius: Scalars['Float'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],starID?: (Scalars['String'] | null),subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceArea: Scalars['Float'],systemID: Scalars['String']},PlanetRequest]
     createQuadrant?: [{galaxyID: Scalars['String'],quadrantName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int']},QuadrantRequest]
     createSector?: [{galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorName: Scalars['String'],sectorX: Scalars['Int'],sectorY: Scalars['Int']},SectorRequest]
-    createStar?: [{averageDistance?: (Scalars['Float'] | null),diameter: Scalars['Float'],eccentricity?: (Scalars['Float'] | null),galaxyID: Scalars['String'],luminosity: Scalars['Float'],mass: Scalars['Float'],maximumDistance?: (Scalars['Float'] | null),minimumDistance?: (Scalars['Float'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],spectralClass: Scalars['String'],starName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceTemperature: Scalars['Float'],systemID: Scalars['String']},StarRequest]
+    createStar?: [{diameter: Scalars['Float'],galaxyID: Scalars['String'],luminosity: Scalars['Float'],mass: Scalars['Float'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],spectralClass: Scalars['String'],starName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceTemperature: Scalars['Float'],systemID: Scalars['String']},StarRequest]
     createSubsector?: [{galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int']},SubsectorRequest]
-    createSystem?: [{barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),parentSystemID?: (Scalars['String'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemName: Scalars['String']},SystemRequest]
+    createSystem?: [{barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),binaryEccentricity?: (Scalars['Float'] | null),binaryMaximumDistance?: (Scalars['Float'] | null),binaryMinimumDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),parentSystemID?: (Scalars['String'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemName: Scalars['String']},SystemRequest]
+    updateSystem?: [{barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),binaryEccentricity?: (Scalars['Float'] | null),binaryMaximumDistance?: (Scalars['Float'] | null),binaryMinimumDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),systemID: Scalars['String'],systemName: Scalars['String']},SystemRequest]
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -181,6 +184,7 @@ export interface PlanetRequest{
     planetID?: boolean | number
     planetName?: boolean | number
     radius?: boolean | number
+    starID?: boolean | number
     surfaceArea?: boolean | number
     systemID?: boolean | number
     __typename?: boolean | number
@@ -205,6 +209,7 @@ export interface QueryRequest{
     planets?: [{galaxyID: Scalars['String']},PlanetRequest]
     planetsByQuadrant?: [{galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int']},PlanetRequest]
     planetsBySector?: [{galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int']},PlanetRequest]
+    planetsByStar?: [{galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],starID: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']},PlanetRequest]
     planetsBySubsector?: [{galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int']},PlanetRequest]
     planetsBySystem?: [{galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']},PlanetRequest]
     quadrants?: [{galaxyID: Scalars['String']},QuadrantRequest]
@@ -235,13 +240,9 @@ export interface SectorRequest{
 }
 
 export interface StarRequest{
-    averageDistance?: boolean | number
     diameter?: boolean | number
-    eccentricity?: boolean | number
     luminosity?: boolean | number
     mass?: boolean | number
-    maximumDistance?: boolean | number
-    minimumDistance?: boolean | number
     spectralClass?: boolean | number
     starID?: boolean | number
     starName?: boolean | number
@@ -262,6 +263,9 @@ export interface SubsectorRequest{
 export interface SystemRequest{
     barycenter?: boolean | number
     binaryAverageDistance?: boolean | number
+    binaryEccentricity?: boolean | number
+    binaryMaximumDistance?: boolean | number
+    binaryMinimumDistance?: boolean | number
     forbiddenZoneInner?: boolean | number
     forbiddenZoneOuter?: boolean | number
     frostLine?: boolean | number
@@ -369,23 +373,25 @@ export interface GalaxyObservableChain{
 export interface MutationPromiseChain{
     createGalaxy: ((args: {galaxyName: Scalars['String']}) => GalaxyPromiseChain & {get: <R extends GalaxyRequest>(request: R, defaultValue?: FieldsSelection<Galaxy, R>) => Promise<FieldsSelection<Galaxy, R>>}),
     createOre: ((args: {depth: Scalars['Float'],galaxyID: Scalars['String'],oreType: Scalars['String'],parentObjectID: Scalars['String'],parentObjectType: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],size: Scalars['Float'],stripRatio: Scalars['Float'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']}) => OrePromiseChain & {get: <R extends OreRequest>(request: R, defaultValue?: FieldsSelection<Ore, R>) => Promise<FieldsSelection<Ore, R>>}),
-    createPlanet: ((args: {averageOrbit: Scalars['Float'],averageTemperature: Scalars['Float'],axialTilt: Scalars['Float'],density: Scalars['Float'],eccentricity: Scalars['Float'],galaxyID: Scalars['String'],mass: Scalars['Float'],parentPlanetID?: (Scalars['String'] | null),planetName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],radius: Scalars['Float'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceArea: Scalars['Float'],systemID: Scalars['String']}) => PlanetPromiseChain & {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>) => Promise<FieldsSelection<Planet, R>>}),
+    createPlanet: ((args: {averageOrbit: Scalars['Float'],averageTemperature: Scalars['Float'],axialTilt: Scalars['Float'],density: Scalars['Float'],eccentricity: Scalars['Float'],galaxyID: Scalars['String'],mass: Scalars['Float'],parentPlanetID?: (Scalars['String'] | null),planetName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],radius: Scalars['Float'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],starID?: (Scalars['String'] | null),subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceArea: Scalars['Float'],systemID: Scalars['String']}) => PlanetPromiseChain & {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>) => Promise<FieldsSelection<Planet, R>>}),
     createQuadrant: ((args: {galaxyID: Scalars['String'],quadrantName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int']}) => QuadrantPromiseChain & {get: <R extends QuadrantRequest>(request: R, defaultValue?: FieldsSelection<Quadrant, R>) => Promise<FieldsSelection<Quadrant, R>>}),
     createSector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorName: Scalars['String'],sectorX: Scalars['Int'],sectorY: Scalars['Int']}) => SectorPromiseChain & {get: <R extends SectorRequest>(request: R, defaultValue?: FieldsSelection<Sector, R>) => Promise<FieldsSelection<Sector, R>>}),
-    createStar: ((args: {averageDistance?: (Scalars['Float'] | null),diameter: Scalars['Float'],eccentricity?: (Scalars['Float'] | null),galaxyID: Scalars['String'],luminosity: Scalars['Float'],mass: Scalars['Float'],maximumDistance?: (Scalars['Float'] | null),minimumDistance?: (Scalars['Float'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],spectralClass: Scalars['String'],starName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceTemperature: Scalars['Float'],systemID: Scalars['String']}) => StarPromiseChain & {get: <R extends StarRequest>(request: R, defaultValue?: FieldsSelection<Star, R>) => Promise<FieldsSelection<Star, R>>}),
+    createStar: ((args: {diameter: Scalars['Float'],galaxyID: Scalars['String'],luminosity: Scalars['Float'],mass: Scalars['Float'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],spectralClass: Scalars['String'],starName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceTemperature: Scalars['Float'],systemID: Scalars['String']}) => StarPromiseChain & {get: <R extends StarRequest>(request: R, defaultValue?: FieldsSelection<Star, R>) => Promise<FieldsSelection<Star, R>>}),
     createSubsector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int']}) => SubsectorPromiseChain & {get: <R extends SubsectorRequest>(request: R, defaultValue?: FieldsSelection<Subsector, R>) => Promise<FieldsSelection<Subsector, R>>}),
-    createSystem: ((args: {barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),parentSystemID?: (Scalars['String'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemName: Scalars['String']}) => SystemPromiseChain & {get: <R extends SystemRequest>(request: R, defaultValue?: FieldsSelection<System, R>) => Promise<FieldsSelection<System, R>>})
+    createSystem: ((args: {barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),binaryEccentricity?: (Scalars['Float'] | null),binaryMaximumDistance?: (Scalars['Float'] | null),binaryMinimumDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),parentSystemID?: (Scalars['String'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemName: Scalars['String']}) => SystemPromiseChain & {get: <R extends SystemRequest>(request: R, defaultValue?: FieldsSelection<System, R>) => Promise<FieldsSelection<System, R>>}),
+    updateSystem: ((args: {barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),binaryEccentricity?: (Scalars['Float'] | null),binaryMaximumDistance?: (Scalars['Float'] | null),binaryMinimumDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),systemID: Scalars['String'],systemName: Scalars['String']}) => SystemPromiseChain & {get: <R extends SystemRequest>(request: R, defaultValue?: FieldsSelection<System, R>) => Promise<FieldsSelection<System, R>>})
 }
 
 export interface MutationObservableChain{
     createGalaxy: ((args: {galaxyName: Scalars['String']}) => GalaxyObservableChain & {get: <R extends GalaxyRequest>(request: R, defaultValue?: FieldsSelection<Galaxy, R>) => Observable<FieldsSelection<Galaxy, R>>}),
     createOre: ((args: {depth: Scalars['Float'],galaxyID: Scalars['String'],oreType: Scalars['String'],parentObjectID: Scalars['String'],parentObjectType: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],size: Scalars['Float'],stripRatio: Scalars['Float'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']}) => OreObservableChain & {get: <R extends OreRequest>(request: R, defaultValue?: FieldsSelection<Ore, R>) => Observable<FieldsSelection<Ore, R>>}),
-    createPlanet: ((args: {averageOrbit: Scalars['Float'],averageTemperature: Scalars['Float'],axialTilt: Scalars['Float'],density: Scalars['Float'],eccentricity: Scalars['Float'],galaxyID: Scalars['String'],mass: Scalars['Float'],parentPlanetID?: (Scalars['String'] | null),planetName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],radius: Scalars['Float'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceArea: Scalars['Float'],systemID: Scalars['String']}) => PlanetObservableChain & {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>) => Observable<FieldsSelection<Planet, R>>}),
+    createPlanet: ((args: {averageOrbit: Scalars['Float'],averageTemperature: Scalars['Float'],axialTilt: Scalars['Float'],density: Scalars['Float'],eccentricity: Scalars['Float'],galaxyID: Scalars['String'],mass: Scalars['Float'],parentPlanetID?: (Scalars['String'] | null),planetName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],radius: Scalars['Float'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],starID?: (Scalars['String'] | null),subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceArea: Scalars['Float'],systemID: Scalars['String']}) => PlanetObservableChain & {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>) => Observable<FieldsSelection<Planet, R>>}),
     createQuadrant: ((args: {galaxyID: Scalars['String'],quadrantName: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int']}) => QuadrantObservableChain & {get: <R extends QuadrantRequest>(request: R, defaultValue?: FieldsSelection<Quadrant, R>) => Observable<FieldsSelection<Quadrant, R>>}),
     createSector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorName: Scalars['String'],sectorX: Scalars['Int'],sectorY: Scalars['Int']}) => SectorObservableChain & {get: <R extends SectorRequest>(request: R, defaultValue?: FieldsSelection<Sector, R>) => Observable<FieldsSelection<Sector, R>>}),
-    createStar: ((args: {averageDistance?: (Scalars['Float'] | null),diameter: Scalars['Float'],eccentricity?: (Scalars['Float'] | null),galaxyID: Scalars['String'],luminosity: Scalars['Float'],mass: Scalars['Float'],maximumDistance?: (Scalars['Float'] | null),minimumDistance?: (Scalars['Float'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],spectralClass: Scalars['String'],starName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceTemperature: Scalars['Float'],systemID: Scalars['String']}) => StarObservableChain & {get: <R extends StarRequest>(request: R, defaultValue?: FieldsSelection<Star, R>) => Observable<FieldsSelection<Star, R>>}),
+    createStar: ((args: {diameter: Scalars['Float'],galaxyID: Scalars['String'],luminosity: Scalars['Float'],mass: Scalars['Float'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],spectralClass: Scalars['String'],starName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],surfaceTemperature: Scalars['Float'],systemID: Scalars['String']}) => StarObservableChain & {get: <R extends StarRequest>(request: R, defaultValue?: FieldsSelection<Star, R>) => Observable<FieldsSelection<Star, R>>}),
     createSubsector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorName: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int']}) => SubsectorObservableChain & {get: <R extends SubsectorRequest>(request: R, defaultValue?: FieldsSelection<Subsector, R>) => Observable<FieldsSelection<Subsector, R>>}),
-    createSystem: ((args: {barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),parentSystemID?: (Scalars['String'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemName: Scalars['String']}) => SystemObservableChain & {get: <R extends SystemRequest>(request: R, defaultValue?: FieldsSelection<System, R>) => Observable<FieldsSelection<System, R>>})
+    createSystem: ((args: {barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),binaryEccentricity?: (Scalars['Float'] | null),binaryMaximumDistance?: (Scalars['Float'] | null),binaryMinimumDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),parentSystemID?: (Scalars['String'] | null),quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemName: Scalars['String']}) => SystemObservableChain & {get: <R extends SystemRequest>(request: R, defaultValue?: FieldsSelection<System, R>) => Observable<FieldsSelection<System, R>>}),
+    updateSystem: ((args: {barycenter?: (Scalars['Float'] | null),binaryAverageDistance?: (Scalars['Float'] | null),binaryEccentricity?: (Scalars['Float'] | null),binaryMaximumDistance?: (Scalars['Float'] | null),binaryMinimumDistance?: (Scalars['Float'] | null),forbiddenZoneInner?: (Scalars['Float'] | null),forbiddenZoneOuter?: (Scalars['Float'] | null),frostLine?: (Scalars['Float'] | null),galaxyID: Scalars['String'],habitableZoneInner?: (Scalars['Float'] | null),habitableZoneOuter?: (Scalars['Float'] | null),innerOrbitLimit?: (Scalars['Float'] | null),outerOrbitLimit?: (Scalars['Float'] | null),systemID: Scalars['String'],systemName: Scalars['String']}) => SystemObservableChain & {get: <R extends SystemRequest>(request: R, defaultValue?: FieldsSelection<System, R>) => Observable<FieldsSelection<System, R>>})
 }
 
 export interface OrePromiseChain{
@@ -421,6 +427,7 @@ export interface PlanetPromiseChain{
     planetID: ({get: (request?: boolean|number, defaultValue?: Scalars['ID']) => Promise<Scalars['ID']>}),
     planetName: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Promise<Scalars['String']>}),
     radius: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Promise<Scalars['Float']>}),
+    starID: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] | undefined)) => Promise<(Scalars['String'] | undefined)>}),
     surfaceArea: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Promise<Scalars['Float']>}),
     systemID: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Promise<Scalars['String']>})
 }
@@ -436,6 +443,7 @@ export interface PlanetObservableChain{
     planetID: ({get: (request?: boolean|number, defaultValue?: Scalars['ID']) => Observable<Scalars['ID']>}),
     planetName: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Observable<Scalars['String']>}),
     radius: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Observable<Scalars['Float']>}),
+    starID: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] | undefined)) => Observable<(Scalars['String'] | undefined)>}),
     surfaceArea: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Observable<Scalars['Float']>}),
     systemID: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Observable<Scalars['String']>})
 }
@@ -462,6 +470,7 @@ export interface QueryPromiseChain{
     planets: ((args: {galaxyID: Scalars['String']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Promise<FieldsSelection<Planet, R>[]>}),
     planetsByQuadrant: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Promise<FieldsSelection<Planet, R>[]>}),
     planetsBySector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Promise<FieldsSelection<Planet, R>[]>}),
+    planetsByStar: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],starID: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Promise<FieldsSelection<Planet, R>[]>}),
     planetsBySubsector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Promise<FieldsSelection<Planet, R>[]>}),
     planetsBySystem: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Promise<FieldsSelection<Planet, R>[]>}),
     quadrants: ((args: {galaxyID: Scalars['String']}) => {get: <R extends QuadrantRequest>(request: R, defaultValue?: FieldsSelection<Quadrant, R>[]) => Promise<FieldsSelection<Quadrant, R>[]>}),
@@ -491,6 +500,7 @@ export interface QueryObservableChain{
     planets: ((args: {galaxyID: Scalars['String']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Observable<FieldsSelection<Planet, R>[]>}),
     planetsByQuadrant: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Observable<FieldsSelection<Planet, R>[]>}),
     planetsBySector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Observable<FieldsSelection<Planet, R>[]>}),
+    planetsByStar: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],starID: Scalars['String'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Observable<FieldsSelection<Planet, R>[]>}),
     planetsBySubsector: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Observable<FieldsSelection<Planet, R>[]>}),
     planetsBySystem: ((args: {galaxyID: Scalars['String'],quadrantX: Scalars['Int'],quadrantY: Scalars['Int'],sectorX: Scalars['Int'],sectorY: Scalars['Int'],subsectorX: Scalars['Int'],subsectorY: Scalars['Int'],systemID: Scalars['String']}) => {get: <R extends PlanetRequest>(request: R, defaultValue?: FieldsSelection<Planet, R>[]) => Observable<FieldsSelection<Planet, R>[]>}),
     quadrants: ((args: {galaxyID: Scalars['String']}) => {get: <R extends QuadrantRequest>(request: R, defaultValue?: FieldsSelection<Quadrant, R>[]) => Observable<FieldsSelection<Quadrant, R>[]>}),
@@ -523,13 +533,9 @@ export interface SectorObservableChain{
 }
 
 export interface StarPromiseChain{
-    averageDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     diameter: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Promise<Scalars['Float']>}),
-    eccentricity: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     luminosity: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Promise<Scalars['Float']>}),
     mass: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Promise<Scalars['Float']>}),
-    maximumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
-    minimumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     spectralClass: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] | undefined)) => Promise<(Scalars['String'] | undefined)>}),
     starID: ({get: (request?: boolean|number, defaultValue?: Scalars['ID']) => Promise<Scalars['ID']>}),
     starName: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Promise<Scalars['String']>}),
@@ -538,13 +544,9 @@ export interface StarPromiseChain{
 }
 
 export interface StarObservableChain{
-    averageDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     diameter: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Observable<Scalars['Float']>}),
-    eccentricity: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     luminosity: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Observable<Scalars['Float']>}),
     mass: ({get: (request?: boolean|number, defaultValue?: Scalars['Float']) => Observable<Scalars['Float']>}),
-    maximumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
-    minimumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     spectralClass: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] | undefined)) => Observable<(Scalars['String'] | undefined)>}),
     starID: ({get: (request?: boolean|number, defaultValue?: Scalars['ID']) => Observable<Scalars['ID']>}),
     starName: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Observable<Scalars['String']>}),
@@ -567,6 +569,9 @@ export interface SubsectorObservableChain{
 export interface SystemPromiseChain{
     barycenter: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     binaryAverageDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
+    binaryEccentricity: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
+    binaryMaximumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
+    binaryMinimumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     forbiddenZoneInner: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     forbiddenZoneOuter: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     frostLine: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
@@ -574,7 +579,7 @@ export interface SystemPromiseChain{
     habitableZoneOuter: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     innerOrbitLimit: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
     outerOrbitLimit: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Promise<(Scalars['Float'] | undefined)>}),
-    parentSystemID: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Promise<Scalars['String']>}),
+    parentSystemID: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] | undefined)) => Promise<(Scalars['String'] | undefined)>}),
     systemID: ({get: (request?: boolean|number, defaultValue?: Scalars['ID']) => Promise<Scalars['ID']>}),
     systemName: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Promise<Scalars['String']>})
 }
@@ -582,6 +587,9 @@ export interface SystemPromiseChain{
 export interface SystemObservableChain{
     barycenter: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     binaryAverageDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
+    binaryEccentricity: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
+    binaryMaximumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
+    binaryMinimumDistance: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     forbiddenZoneInner: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     forbiddenZoneOuter: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     frostLine: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
@@ -589,7 +597,7 @@ export interface SystemObservableChain{
     habitableZoneOuter: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     innerOrbitLimit: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
     outerOrbitLimit: ({get: (request?: boolean|number, defaultValue?: (Scalars['Float'] | undefined)) => Observable<(Scalars['Float'] | undefined)>}),
-    parentSystemID: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Observable<Scalars['String']>}),
+    parentSystemID: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] | undefined)) => Observable<(Scalars['String'] | undefined)>}),
     systemID: ({get: (request?: boolean|number, defaultValue?: Scalars['ID']) => Observable<Scalars['ID']>}),
     systemName: ({get: (request?: boolean|number, defaultValue?: Scalars['String']) => Observable<Scalars['String']>})
 }

@@ -68,10 +68,6 @@ export const SystemEntity = new Entity(
         label: "parentsys",
         readOnly: true,
       },
-      binarySystemType: {
-        type: "string",
-        label: "systype",
-      },
       binaryMinimumDistance: {
         type: "number",
         field: "minDist",
@@ -157,8 +153,8 @@ export function create(
   subsectorX: number, 
   subsectorY: number, 
   systemName: string, 
+  systemID?: string,
   parentSystemID?: string,
-  binarySystemType?: string,
   binaryMinimumDistance?: number,
   binaryAverageDistance?: number,
   binaryMaximumDistance?: number,
@@ -173,7 +169,9 @@ export function create(
   forbiddenZoneOuter?: number
   ) {
   
-  const systemID = ulid();
+  if(typeof systemID == 'undefined'){
+    systemID = ulid();
+  }
   
   if(typeof parentSystemID == 'undefined'){
     parentSystemID = systemID;
@@ -190,7 +188,6 @@ export function create(
     systemID,
     systemName,
     parentSystemID,
-    binarySystemType,
     binaryMinimumDistance,
     binaryAverageDistance,
     binaryMaximumDistance,

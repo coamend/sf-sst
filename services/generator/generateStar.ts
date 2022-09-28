@@ -1,4 +1,4 @@
-import { Star, Client } from "../../graphql/genql";
+import { Star, Client, everything } from "../../graphql/genql";
 import { generateName } from "./generateName";
 import { getRandomNumberInRange } from "./getRandomNumberInRange";
 
@@ -24,16 +24,8 @@ const MASS_TO_DIAMETER_EXPONENT_RATIO: number = 0.74;
 const MASS_TO_SURFACE_TEMP_EXPONENT_RATIO: number = 0.505;
 
 export async function generateStar (
-    client: Client, 
-    galaxyID: string, 
-    systemID: string,
     starName: string,
-    quadrantX: number, 
-    quadrantY: number, 
-    sectorX: number, 
-    sectorY: number, 
-    subsectorX: number, 
-    subsectorY: number): Promise<string>
+    ): Promise<Star>
 {
     let diameter: number = 1;
     let luminosity: number = 1;
@@ -93,22 +85,17 @@ export async function generateStar (
     //Calculate Surface Temperature
     surfaceTemp = mass ** MASS_TO_SURFACE_TEMP_EXPONENT_RATIO;
 
-    let star = (await client.mutation({createStar: [{ 
-        galaxyID: galaxyID, 
-        systemID: systemID,
+    let star: Star = {
+        systemID: "",
         starName: starName,
-        quadrantX: quadrantX,
-        quadrantY: quadrantY,
-        sectorX: sectorX,
-        sectorY: sectorY,
-        subsectorX: subsectorX,
-        subsectorY: subsectorY,
         diameter: diameter,
         luminosity: luminosity,
         mass: mass,
         spectralClass: spectralType,
         surfaceTemperature: surfaceTemp,
-    }, { starID: true }]})).createStar.starID
-
+        starID: "",
+        __typename: "Star"
+    }
+    
     return star;
 };

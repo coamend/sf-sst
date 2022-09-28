@@ -6,12 +6,13 @@ type Galaxy {
 type Mutation {
   createGalaxy(galaxyName: String!): Galaxy!
   createOre(depth: Float!, galaxyID: String!, oreType: String!, parentObjectID: String!, parentObjectType: String!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, size: Float!, stripRatio: Float!, subsectorX: Int!, subsectorY: Int!, systemID: String!): Ore!
-  createPlanet(averageOrbit: Float!, averageTemperature: Float!, axialTilt: Float!, density: Float!, eccentricity: Float!, galaxyID: String!, mass: Float!, parentPlanetID: String, planetName: String!, quadrantX: Int!, quadrantY: Int!, radius: Float!, sectorX: Int!, sectorY: Int!, subsectorX: Int!, subsectorY: Int!, surfaceArea: Float!, systemID: String!): Planet!
+  createPlanet(averageOrbit: Float!, averageTemperature: Float!, axialTilt: Float!, density: Float!, eccentricity: Float!, galaxyID: String!, mass: Float!, parentPlanetID: String, planetName: String!, quadrantX: Int!, quadrantY: Int!, radius: Float!, sectorX: Int!, sectorY: Int!, starID: String, subsectorX: Int!, subsectorY: Int!, surfaceArea: Float!, systemID: String!): Planet!
   createQuadrant(galaxyID: String!, quadrantName: String!, quadrantX: Int!, quadrantY: Int!): Quadrant!
   createSector(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorName: String!, sectorX: Int!, sectorY: Int!): Sector!
-  createStar(averageDistance: Float, diameter: Float!, eccentricity: Float, galaxyID: String!, luminosity: Float!, mass: Float!, maximumDistance: Float, minimumDistance: Float, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, spectralClass: String!, starName: String!, subsectorX: Int!, subsectorY: Int!, surfaceTemperature: Float!, systemID: String!): Star!
+  createStar(diameter: Float!, galaxyID: String!, luminosity: Float!, mass: Float!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, spectralClass: String!, starName: String!, subsectorX: Int!, subsectorY: Int!, surfaceTemperature: Float!, systemID: String!): Star!
   createSubsector(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, subsectorName: String!, subsectorX: Int!, subsectorY: Int!): Subsector!
-  createSystem(barycenter: Float, binaryAverageDistance: Float, forbiddenZoneInner: Float, forbiddenZoneOuter: Float, frostLine: Float, galaxyID: String!, habitableZoneInner: Float, habitableZoneOuter: Float, innerOrbitLimit: Float, outerOrbitLimit: Float, parentSystemID: String, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, subsectorX: Int!, subsectorY: Int!, systemName: String!): System!
+  createSystem(barycenter: Float, binaryAverageDistance: Float, binaryEccentricity: Float, binaryMaximumDistance: Float, binaryMinimumDistance: Float, forbiddenZoneInner: Float, forbiddenZoneOuter: Float, frostLine: Float, galaxyID: String!, habitableZoneInner: Float, habitableZoneOuter: Float, innerOrbitLimit: Float, outerOrbitLimit: Float, parentSystemID: String, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, subsectorX: Int!, subsectorY: Int!, systemName: String!): System!
+  updateSystem(barycenter: Float, binaryAverageDistance: Float, binaryEccentricity: Float, binaryMaximumDistance: Float, binaryMinimumDistance: Float, forbiddenZoneInner: Float, forbiddenZoneOuter: Float, frostLine: Float, galaxyID: String!, habitableZoneInner: Float, habitableZoneOuter: Float, innerOrbitLimit: Float, outerOrbitLimit: Float, systemID: String!, systemName: String!): System!
 }
 
 type Ore {
@@ -36,6 +37,7 @@ type Planet {
   planetID: ID!
   planetName: String!
   radius: Float!
+  starID: String
   surfaceArea: Float!
   systemID: String!
 }
@@ -56,6 +58,7 @@ type Query {
   planets(galaxyID: String!): [Planet!]!
   planetsByQuadrant(galaxyID: String!, quadrantX: Int!, quadrantY: Int!): [Planet!]!
   planetsBySector(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!): [Planet!]!
+  planetsByStar(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, starID: String!, subsectorX: Int!, subsectorY: Int!, systemID: String!): [Planet!]!
   planetsBySubsector(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, subsectorX: Int!, subsectorY: Int!): [Planet!]!
   planetsBySystem(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, subsectorX: Int!, subsectorY: Int!, systemID: String!): [Planet!]!
   quadrants(galaxyID: String!): [Quadrant!]!
@@ -82,13 +85,9 @@ type Sector {
 }
 
 type Star {
-  averageDistance: Float
   diameter: Float!
-  eccentricity: Float
   luminosity: Float!
   mass: Float!
-  maximumDistance: Float
-  minimumDistance: Float
   spectralClass: String
   starID: ID!
   starName: String!
@@ -105,6 +104,9 @@ type Subsector {
 type System {
   barycenter: Float
   binaryAverageDistance: Float
+  binaryEccentricity: Float
+  binaryMaximumDistance: Float
+  binaryMinimumDistance: Float
   forbiddenZoneInner: Float
   forbiddenZoneOuter: Float
   frostLine: Float
@@ -112,7 +114,7 @@ type System {
   habitableZoneOuter: Float
   innerOrbitLimit: Float
   outerOrbitLimit: Float
-  parentSystemID: String!
+  parentSystemID: String
   systemID: ID!
   systemName: String!
 }

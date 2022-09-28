@@ -1,95 +1,151 @@
-import { createClient } from "../../graphql/genql";
-import { SQSEvent, SQSRecord } from "aws-lambda";
+import { Client, createClient, System, Star, everything } from "../../graphql/genql";
+import { generateName } from "./generateName";
+import { generateStar } from "./generateStar";
+import { ulid } from "ulid";
+import { getRandomNumberInRange } from "./getRandomNumberInRange";
 
+const BINARY_AVG_DIST_MIN_MAX: Array<number> = [0.15, 600];
+const BINARY_ECCENTRICITY_MIN_MAX: Array<number> = [0, 0.7];
+const FORBIDDEN_ZONE_MULTIPLE: number = 3;
+const MULTI_SYSTEM_DIST_MIN_MAX: Array<number> = [1200, 60000];
+const INNER_ORBIT_LIMIT_MULTIPLE: number = 0.1;
+const OUTER_ORBIT_LIMIT_MULTIPLE: number = 40;
+const FROST_LINE_MULTIPLE: number = 4.85;
+const HABITABLE_ZONE_INNER_MULTIPLE: number = 0.95;
+const HABITABLE_ZONE_OUTER_MULTIPLE: number = 1.37;
 
-export async function main(event: SQSEvent) {
-    const batchItemFailures = new Array;
+export async function generateSystem(systemName: string, star1: Star, star2?: Star, star3?: Star, star4?: Star, parentSystemID?: string): Promise<System> {
+    let totalMass = star1.mass + (star2?.mass?? 0) + (star3?.mass?? 0) + (star4?.mass?? 0);
+    let luminositySqrt = Math.sqrt(star1.luminosity + (star2?.luminosity?? 0) + (star3?.luminosity?? 0) + (star4?.luminosity?? 0));
+    let binaryMinimumDistance, binaryAverageDistance, binaryMaximumDistance, barycenter, binaryEccentricity, frostLine, 
+        forbiddenZoneInner, forbiddenZoneOuter, innerOrbitLimit, outerOrbitLimit, habitableZoneInner, habitableZoneOuter;
 
-    await Promise.allSettled(
-        event.Records.map(async (record: SQSRecord) => {
-        const body = record.body;
-        try {
-            generateSystem(body);
-        }
-        catch(e) {
-          console.log(`Error while generating system: ${body}`);
-          batchItemFailures.push({itemIdentifier: record.messageId});
-        }
-      })
-    );
-
-    console.log('Successfully created ' + event.Records.length.toString() + ' systems');
-
-    return {batchItemFailures};
-};
-
-async function generateSystem(message) {
-    try{
-        let client = createClient({ url: process.env.GRAPHQL_URL });
-    }
-    catch (e) {
-        console.log("Failed to connect to graphQL API: %s, %j", process.env.GRAPHQL_URL, e);
-        //mark all messages as failed to process
-        throw(e);
-    }
-
-    try{
-        if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
+    if(typeof star2 != undefined){
+        if(typeof star3 != undefined)
         {
-            //Multi-star system
-            let primarySystemType: string;
-            let secondarySystemType: string;
-            let numStars: number = 2;
+            //calculate trinary/quad stuff here
+            binaryAverageDistance = getRandomNumberInRange(MULTI_SYSTEM_DIST_MIN_MAX);
 
-            if(Math.random() <= Number(process.env.P_TYPE_MULTI_SYSTEM_PROBABILITY))
-            {
-                primarySystemType = 'P';
+            if(star1.mass + (star2?.mass??0) >= (star3?.mass??0) + (star4?.mass??0)){
+                barycenter = binaryAverageDistance * ((star3?.mass??0) + (star4?.mass??0) / (star1.mass + (star2?.mass??0) + (star3?.mass??0) + (star4?.mass??0)));
             }
             else
             {
-                primarySystemType = 'S';
+                barycenter = binaryAverageDistance * (star1.mass + (star2?.mass??0) / (star1.mass + (star2?.mass??0) + (star3?.mass??0) + (star4?.mass??0)));
             }
-
-            if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
-            {
-                //Trinary system
-                numStars = 3;
-
-                if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
-                {
-                    //Quad system
-                    numStars = 4;
-
-                    if(Math.random() <= Number(process.env.P_TYPE_MULTI_SYSTEM_PROBABILITY))
-                    {
-                        secondarySystemType = 'P';
-                    }
-                    else
-                    {
-                        secondarySystemType = 'S';
-                    }
-                }
-            }
-
-            //If 2 systems, create parent system
-            //Create system 1
-            //Create system 1 stars
-            //Create system 2
-            //Create system 2 stars
-            //Update parent system barycenter, distance
         }
         else
         {
-            //Single star system
+            //calculate binary stuff here
+            binaryAverageDistance = getRandomNumberInRange(BINARY_AVG_DIST_MIN_MAX);
+
+            if(star1.mass >= (star2?.mass??0)){
+                barycenter = binaryAverageDistance * ((star2?.mass??0) / (star1.mass + (star2?.mass??0)));
+            }
+            else
+            {
+                barycenter = binaryAverageDistance * (star1.mass / (star1.mass + (star2?.mass??0)));
+            }
         }
-        //Need to make sure that creation checks to make sure it doesn't already exist
-        //Generate planets
-        //Generate moons
-        //Generate ores
+
+        binaryEccentricity = getRandomNumberInRange(BINARY_ECCENTRICITY_MIN_MAX);
+        binaryMinimumDistance = barycenter * (1 - binaryEccentricity);
+        binaryMaximumDistance = barycenter * (1 + binaryEccentricity);
+
+        if(binaryMinimumDistance < 0.1){
+            //numbers don't work, retry
+            console.log("Generated failed binary system: parameters created binary too close (< 0.1 AU)");
+        }
+
+        forbiddenZoneInner = binaryMinimumDistance / FORBIDDEN_ZONE_MULTIPLE;
+        forbiddenZoneOuter = binaryMaximumDistance * FORBIDDEN_ZONE_MULTIPLE;
     }
-    catch (e) {
-        console.log("Failed to generate system: %j", message );
-        //mark as failed to process, clean up
-        throw(e);
+
+    innerOrbitLimit = totalMass * INNER_ORBIT_LIMIT_MULTIPLE;
+    outerOrbitLimit = totalMass * OUTER_ORBIT_LIMIT_MULTIPLE;
+
+    frostLine = luminositySqrt * FROST_LINE_MULTIPLE;
+
+    habitableZoneInner = luminositySqrt * HABITABLE_ZONE_INNER_MULTIPLE;
+    habitableZoneOuter = luminositySqrt * HABITABLE_ZONE_OUTER_MULTIPLE;
+
+    if(habitableZoneInner > (forbiddenZoneInner?? Number.MAX_VALUE) && habitableZoneOuter < (forbiddenZoneOuter?? 0)){
+        //Habitable zone lies strictly withing the forbidden zone
+        habitableZoneInner = undefined;
+        habitableZoneOuter = undefined;
     }
+    else if (habitableZoneInner < (forbiddenZoneOuter?? 0) && habitableZoneInner > (forbiddenZoneInner?? Number.MAX_VALUE)){
+        //Habitable zone inner boundary lies within the forbidden zone, moving to forbidden zone outer boundary
+        habitableZoneInner = forbiddenZoneOuter;
+    }
+    else if (habitableZoneOuter < (forbiddenZoneOuter?? 0) && habitableZoneOuter > (forbiddenZoneInner?? Number.MAX_VALUE)){
+        //Habitable zone outer boundary lies within the forbidden zone, moving to forbidden zone inner boundary
+        habitableZoneOuter = forbiddenZoneInner;
+    }
+    
+    let system: System = {
+        systemID: ulid(),
+        systemName,
+        parentSystemID,
+        binaryAverageDistance,
+        barycenter,
+        binaryEccentricity,
+        binaryMaximumDistance,
+        binaryMinimumDistance,
+        forbiddenZoneInner,
+        forbiddenZoneOuter,
+        innerOrbitLimit,
+        outerOrbitLimit,
+        frostLine,
+        habitableZoneInner,
+        habitableZoneOuter,
+        __typename: "System",
+    }
+
+    return system;
+}
+
+export async function saveSystem(client: Client, message, system: System): Promise<System> {
+    return (await client.mutation({createSystem: [{ 
+        galaxyID: message.galaxyID, 
+        systemName: system.systemName,
+        quadrantX: message.quadrantX,
+        quadrantY: message.quadrantY,
+        sectorX: message.sectorX,
+        sectorY: message.sectorY,
+        subsectorX: message.subsectorX,
+        subsectorY: message.subsectorY,
+        parentSystemID: system.parentSystemID,
+        barycenter: system.barycenter,
+        binaryAverageDistance: system.binaryAverageDistance,
+        binaryEccentricity: system.binaryEccentricity,
+        binaryMaximumDistance: system.binaryMaximumDistance,
+        binaryMinimumDistance: system.binaryMinimumDistance,
+        innerOrbitLimit: system.innerOrbitLimit,
+        outerOrbitLimit: system.outerOrbitLimit,
+        frostLine: system.frostLine,
+        forbiddenZoneInner: system.forbiddenZoneInner,
+        forbiddenZoneOuter: system.forbiddenZoneOuter,
+        habitableZoneInner: system.habitableZoneInner,
+        habitableZoneOuter: system.habitableZoneOuter,
+    }, everything]})).createSystem;
+}
+
+export async function saveStar(client: Client, message, star: Star): Promise<Star> {
+    return (await client.mutation({createStar: [{ 
+        galaxyID: message.galaxyID, 
+        quadrantX: message.quadrantX,
+        quadrantY: message.quadrantY,
+        sectorX: message.sectorX,
+        sectorY: message.sectorY,
+        subsectorX: message.subsectorX,
+        subsectorY: message.subsectorY,
+        systemID: star.systemID,
+        starName: star.starName,
+        diameter: star.diameter,
+        luminosity: star.luminosity,
+        mass: star.mass,
+        spectralClass: star.spectralClass!,
+        surfaceTemperature: star.surfaceTemperature,
+    }, everything]})).createStar;
 }

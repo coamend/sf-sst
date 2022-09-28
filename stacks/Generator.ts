@@ -11,7 +11,7 @@ export function Generator({ stack }: StackContext) {
   const systemGenerationQueue = new Queue(stack, "systemGenerationQueue", {
     consumer: {
         function: {
-            handler: "services/generator/generateSystem.main",
+            handler: "services/generator/generateSystemHandler.main",
             timeout: 20,
             environment: {
               GRAPHQL_URL: api.url + "/graphql",
