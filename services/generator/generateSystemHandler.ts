@@ -1,8 +1,10 @@
 import { SQSEvent, SQSRecord } from "aws-lambda";
-import { Client, createClient, System, Star } from "../../graphql/genql";
+import { Client, createClient, System, Star, Planet } from "../../graphql/genql";
 import { generateSystem, saveStar, saveSystem } from "./generateSystem";
 import { generateStar } from "./generateStar";
 import { generateName } from "./generateName";
+import { generatePlanets, savePlanet } from "./generatePlanets";
+import { generateMoons } from "./generateMoons";
 
 export async function main(event: SQSEvent) {
     const batchItemFailures = new Array;
@@ -39,6 +41,8 @@ async function processMessage(message) {
 
     let systems = new Array<System>;
     let stars = new Array<Star>;
+    let planets = new Array<Planet>;
+    let moons = new Array<Planet>;
     let systemName = generateName();
     
     try{
@@ -148,15 +152,25 @@ async function processMessage(message) {
         }
 
         for(let system of systems) {
+            //TODO: Need to make sure that creation checks to make sure it doesn't already exist
             await saveSystem(client, message, system);
-            //Need to make sure that creation checks to make sure it doesn't already exist
-            //Generate planets
-            //Generate moons
+            let newPlanets = await generatePlanets(system);
+
+            for(let planet of newPlanets) {
+                planets = planets.concat(await generateMoons(system, planet));
+            }
+
+            planets = planets.concat(newPlanets);
+            
             //Generate ores 
         }
 
         for(let star of stars) {
             await saveStar(client, message, star);
+        }
+
+        for(let planet of planets) {
+            await savePlanet(client, message, planet);
         }
     }
     catch (e) {

@@ -66,7 +66,7 @@ export async function generatePlanets(system: System): Promise<Planet[]> {
 
         previousOrbit = currentOrbit;
 
-        currentOrbit = currentOrbit / getRandomNumberInRange(ORBITAL_MULTIPLIER_MIN_MAX);
+        currentOrbit /= getRandomNumberInRange(ORBITAL_MULTIPLIER_MIN_MAX);
     }
 
     currentOrbit = startingOrbit * getRandomNumberInRange(ORBITAL_MULTIPLIER_MIN_MAX);
@@ -85,7 +85,7 @@ export async function generatePlanets(system: System): Promise<Planet[]> {
 
         previousOrbit = currentOrbit;
 
-        currentOrbit = currentOrbit * getRandomNumberInRange(ORBITAL_MULTIPLIER_MIN_MAX);
+        currentOrbit *= getRandomNumberInRange(ORBITAL_MULTIPLIER_MIN_MAX);
     }
 
     planets.sort(function(x, y) {
