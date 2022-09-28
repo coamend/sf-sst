@@ -3,6 +3,7 @@ import { System, Planet } from "../../graphql/genql";
 import { calculateHillSphere } from "./calculateHillSphere";
 import { calculateRocheLimit } from "./calculateRocheLimit";
 import { getRandomNumberInRange } from "./getRandomNumberInRange";
+import { PlanetType } from "./generatePlanets";
 
 const CONVERT_EARTH_RADII_TO_AU: number = 0.0000426;
 const LUNAR_DENSITY_ESTIMATE: number = 0.8;
@@ -16,6 +17,7 @@ const WARM_RING_CHANCE: number = 0.01;
 const FROST_RING_CHANCE: number = 0.25;
 const RADIUS_TO_MAX_MASS_LIMIT: number = 1.5;
 const RING_MASS_MIN_MAX: Array<number> = [0.0001, 0.02];
+const PROGRADE_ORBIT_PROBABILITY: number = 0.75;
 
 export async function generateMoons(system: System, planet: Planet): Promise<Planet[]> {
     let moons = new Array<Planet>;
@@ -60,7 +62,8 @@ async function generateMoon(system: System, planet: Planet, orbit: number): Prom
     let moon: Planet;
     let planetID = ulid();
     let planetName = planet.planetName;
-    let averageTemperature, axialTilt, density = 0, mass, eccentricity, radius = 0, surfaceArea;
+    let planetType: string;
+    let averageTemperature, axialTilt, density = 0, mass, eccentricity, radius = 0, surfaceArea = 0;
     let ringChance: number = 0;
     let maxRadius = planet.radius * LUNAR_RADIUS_MAX;
     let maxMass = planet.mass * LUNAR_MASS_MAX;
@@ -77,9 +80,11 @@ async function generateMoon(system: System, planet: Planet, orbit: number): Prom
 
     if(Math.random() < ringChance)
     {
+        planetType = PlanetType.RING;
         mass = getRandomNumberInRange(RING_MASS_MIN_MAX) * orbit;
     }
     else { //Normal moon
+        planetType = PlanetType.MOON;
         radius = getRandomNumberInRange([0.01, maxRadius]);
 
         if(radius * RADIUS_TO_MAX_MASS_LIMIT < maxMass) {
@@ -94,10 +99,18 @@ async function generateMoon(system: System, planet: Planet, orbit: number): Prom
         surfaceArea = 4 * Math.PI * (radius ** 2);
     }
 
+    if(1 - Math.random() < PROGRADE_ORBIT_PROBABILITY) {
+        axialTilt = getRandomNumberInRange([0, 90]);
+    }
+    else {
+        axialTilt = getRandomNumberInRange([90, 180]);
+    }
+
     moon = {
         planetID,
         parentPlanetID: planet.planetID,
         planetName,
+        planetType,
         averageTemperature,
         axialTilt,
         density,

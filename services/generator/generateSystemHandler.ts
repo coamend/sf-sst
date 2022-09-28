@@ -1,10 +1,11 @@
 import { SQSEvent, SQSRecord } from "aws-lambda";
-import { Client, createClient, System, Star, Planet } from "../../graphql/genql";
+import { Client, createClient, System, Star, Planet, Ore } from "../../graphql/genql";
 import { generateSystem, saveStar, saveSystem } from "./generateSystem";
 import { generateStar } from "./generateStar";
 import { generateName } from "./generateName";
 import { generatePlanets, savePlanet } from "./generatePlanets";
 import { generateMoons } from "./generateMoons";
+import { generateOres } from "./generateOres";
 
 export async function main(event: SQSEvent) {
     const batchItemFailures = new Array;
@@ -42,7 +43,7 @@ async function processMessage(message) {
     let systems = new Array<System>;
     let stars = new Array<Star>;
     let planets = new Array<Planet>;
-    let moons = new Array<Planet>;
+    let ores = new Array<Ore>;
     let systemName = generateName();
     
     try{
@@ -154,15 +155,22 @@ async function processMessage(message) {
         for(let system of systems) {
             //TODO: Need to make sure that creation checks to make sure it doesn't already exist
             await saveSystem(client, message, system);
+
             let newPlanets = await generatePlanets(system);
 
             for(let planet of newPlanets) {
-                planets = planets.concat(await generateMoons(system, planet));
+                let newMoons = await generateMoons(system, planet);
+
+                for(let moon of newMoons) {
+                    ores = ores.concat(await generateOres(moon));
+                }
+
+                ores = ores.concat(await generateOres(planet));
+
+                planets = planets.concat(newMoons);
             }
 
             planets = planets.concat(newPlanets);
-            
-            //Generate ores 
         }
 
         for(let star of stars) {
@@ -171,6 +179,10 @@ async function processMessage(message) {
 
         for(let planet of planets) {
             await savePlanet(client, message, planet);
+        }
+
+        for(let ore of ores) {
+            
         }
     }
     catch (e) {

@@ -59,10 +59,6 @@ export const PlanetEntity = new Entity(
         required: true,
         readOnly: true,
       },
-      starID: {
-        type: "string",
-        readOnly: true,
-      },
       planetID: {
         type: "string",
         required: true,
@@ -71,9 +67,12 @@ export const PlanetEntity = new Entity(
         type: "string",
         required: true,
       },
-      parentPlanetID: {
+      planetType: {
         type: "string",
         required: true,
+      },
+      parentPlanetID: {
+        type: "string",
       },
       averageOrbit: {
         type: "number",
@@ -127,7 +126,7 @@ export const PlanetEntity = new Entity(
         },
         sk: {
           field: "gsi1sk",
-          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX, subsectorY", "systemID", "starID"],
+          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX, subsectorY", "systemID"],
         }
       }
     },
@@ -147,6 +146,7 @@ export function create(
   subsectorY: number, 
   systemID: string,
   planetName: string, 
+  planetType: string,
   averageOrbit: number,
   eccentricity: number,
   mass: number,
@@ -155,7 +155,6 @@ export function create(
   surfaceArea: number,
   axialTilt: number,
   averageTemperature: number,
-  starID?: string,
   parentPlanetID?: string,
   ) {
   const planetID = ulid();
@@ -172,9 +171,9 @@ export function create(
     subsectorX,
     subsectorY,
     systemID,
-    starID,
     planetID,
     planetName,
+    planetType,
     parentPlanetID,
     averageOrbit,
     eccentricity,
@@ -205,8 +204,4 @@ export async function listBySubsector(galaxyID: string, quadrantX: number, quadr
 
 export async function listBySystem(galaxyID: string, quadrantX: number, quadrantY: number, sectorX: number, sectorY: number, subsectorX: number, subsectorY: number, systemID: string) {
   return PlanetEntity.query.galacticObjects({galaxyID, quadrantX, quadrantY, sectorX, sectorY, subsectorX, subsectorY, systemID}).go();
-}
-
-export async function listByStar(galaxyID: string, quadrantX: number, quadrantY: number, sectorX: number, sectorY: number, subsectorX: number, subsectorY: number, systemID: string, starID: string) {
-  return PlanetEntity.query.galacticObjects({galaxyID, quadrantX, quadrantY, sectorX, sectorY, subsectorX, subsectorY, systemID, starID}).go();
 }

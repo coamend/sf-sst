@@ -49,10 +49,6 @@ export default {
                         2,
                         "String!"
                     ],
-                    "parentObjectType": [
-                        2,
-                        "String!"
-                    ],
                     "quadrantX": [
                         5,
                         "Int!"
@@ -129,6 +125,10 @@ export default {
                         2,
                         "String!"
                     ],
+                    "planetType": [
+                        2,
+                        "String!"
+                    ],
                     "quadrantX": [
                         5,
                         "Int!"
@@ -148,9 +148,6 @@ export default {
                     "sectorY": [
                         5,
                         "Int!"
-                    ],
-                    "starID": [
-                        2
                     ],
                     "subsectorX": [
                         5,
@@ -428,9 +425,6 @@ export default {
             "parentObjectID": [
                 2
             ],
-            "parentObjectType": [
-                2
-            ],
             "size": [
                 4
             ],
@@ -472,11 +466,11 @@ export default {
             "planetName": [
                 2
             ],
+            "planetType": [
+                2
+            ],
             "radius": [
                 4
-            ],
-            "starID": [
-                2
             ],
             "surfaceArea": [
                 4
@@ -675,47 +669,6 @@ export default {
                     "sectorY": [
                         5,
                         "Int!"
-                    ]
-                }
-            ],
-            "planetsByStar": [
-                7,
-                {
-                    "galaxyID": [
-                        2,
-                        "String!"
-                    ],
-                    "quadrantX": [
-                        5,
-                        "Int!"
-                    ],
-                    "quadrantY": [
-                        5,
-                        "Int!"
-                    ],
-                    "sectorX": [
-                        5,
-                        "Int!"
-                    ],
-                    "sectorY": [
-                        5,
-                        "Int!"
-                    ],
-                    "starID": [
-                        2,
-                        "String!"
-                    ],
-                    "subsectorX": [
-                        5,
-                        "Int!"
-                    ],
-                    "subsectorY": [
-                        5,
-                        "Int!"
-                    ],
-                    "systemID": [
-                        2,
-                        "String!"
                     ]
                 }
             ],

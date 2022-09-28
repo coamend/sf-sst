@@ -6,7 +6,7 @@ const PlanetType = builder
   .implement({
     fields: t => ({
       systemID: t.exposeString("systemID"),
-      starID: t.exposeString("starID", { nullable: true }),
+      planetType: t.exposeString("planetType"),
       planetID: t.exposeID("planetID"),
       planetName: t.exposeString("planetName"),
       averageOrbit: t.exposeFloat("averageOrbit"),
@@ -90,24 +90,6 @@ builder.queryFields(t => ({
   })
 }));
 
-builder.queryFields(t => ({
-  planetsByStar: t.field({
-    type: [PlanetType],
-    args: {
-      galaxyID: t.arg.string({ required: true }),
-      quadrantX: t.arg.int({ required: true }),
-      quadrantY: t.arg.int({ required: true }),
-      sectorX: t.arg.int({ required: true }),
-      sectorY: t.arg.int({ required: true }),
-      subsectorX: t.arg.int({ required: true }),
-      subsectorY: t.arg.int({ required: true }),
-      systemID: t.arg.string({ required: true }),
-      starID: t.arg.string({ required: true }),
-    },
-    resolve: (_, args) => Planet.listByStar(args.galaxyID, args.quadrantX, args.quadrantY, args.sectorX, args.sectorY, args.subsectorX, args.subsectorY, args.systemID, args.starID)
-  })
-}));
-
 builder.mutationFields(t => ({
   createPlanet: t.field({
     type: PlanetType,
@@ -121,6 +103,7 @@ builder.mutationFields(t => ({
       subsectorY: t.arg.int({ required: true }),
       systemID: t.arg.string({ required: true }),
       planetName: t.arg.string({ required: true }),
+      planetType: t.arg.string({ required: true }),
       averageOrbit: t.arg.float({ required: true }),
       eccentricity: t.arg.float({ required: true }),
       mass: t.arg.float({ required: true }),
@@ -129,7 +112,6 @@ builder.mutationFields(t => ({
       surfaceArea: t.arg.float({ required: true }),
       axialTilt: t.arg.float({ required: true }),
       averageTemperature: t.arg.float({ required: true }),
-      starID: t.arg.string(),
       parentPlanetID: t.arg.string()
     },
     resolve: async (_, args) => Planet.create(
@@ -142,6 +124,7 @@ builder.mutationFields(t => ({
       args.subsectorY, 
       args.systemID,
       args.planetName,
+      args.planetType,
       args.averageOrbit,
       args.eccentricity,
       args.mass,
@@ -150,7 +133,6 @@ builder.mutationFields(t => ({
       args.surfaceArea,
       args.axialTilt,
       args.averageTemperature,
-      args.starID??undefined,
       args.parentPlanetID??undefined,
       )
   })

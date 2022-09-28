@@ -63,10 +63,6 @@ export const OreEntity = new Entity(
         type: "string",
         required: true,
       },
-      parentObjectType: {
-        type: "string",
-        required: true,
-      },
       parentObjectID: {
         type: "string",
         required: true,
@@ -126,7 +122,6 @@ export function create(
   subsectorX: number, 
   subsectorY: number, 
   systemID: string,
-  parentObjectType: string,
   parentObjectID: string,
   oreType: string,
   depth: number,
@@ -145,7 +140,6 @@ export function create(
     subsectorY,
     systemID,
     oreID,
-    parentObjectType,
     parentObjectID,
     oreType,
     depth,

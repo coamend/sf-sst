@@ -40,6 +40,18 @@ const HOT_JUPITER_DISTANCE: number = 0.5;
 const HOT_JUPITER_RADIUS_MIN_MAX: Array<number> = [1.5, 18];
 const PROGRADE_ORBIT_PROBABILITY: number = 0.75;
 
+export const enum PlanetType {
+    GAS_GIANT = "Gas Giant",
+    GAS_DWARF = "Gas Dwarf",
+    TERRESTRIAL = "Terrestrial",
+    SUPER_EARTH = "Super Earth",
+    BROWN_DWARF = "Brown Dwarf",
+    ASTEROID_BELT = "Asteroid Belt",
+    HOT_JUPITER = "Puffy Giant",
+    MOON = "Moon",
+    RING = "Ring",
+}
+
 export async function generatePlanets(system: System): Promise<Planet[]> {
     let planets = new Array<Planet>;
     let previousOrbit = 0;
@@ -112,7 +124,7 @@ async function generatePlanet(system: System, orbit: number): Promise<Planet> {
     let planet: Planet;
     let planetID = ulid();
     let planetName = system.systemName
-    let averageTemperature, axialTilt, density, mass, eccentricity, radius, surfaceArea;
+    let planetType, averageTemperature, axialTilt, density, mass, eccentricity, radius, surfaceArea = 0;
 
     eccentricity = getRandomNumberInRange(ECCENTRICITY_MIN_MAX);
 
@@ -120,6 +132,7 @@ async function generatePlanet(system: System, orbit: number): Promise<Planet> {
 
     if(orbit >= system.frostLine!) {
         if(planetRoll < FROZEN_GAS_GIANT_PROBABILITY) {
+            planetType = PlanetType.GAS_GIANT;
             mass = getRandomNumberInRange(GAS_GIANT_MASS_MIN_MAX);
             radius = Math.log10(10 * mass) + getRandomNumberInRange(GAS_GIANT_RADIUS_MIN_MAX);
 
@@ -130,26 +143,31 @@ async function generatePlanet(system: System, orbit: number): Promise<Planet> {
             density = mass / (radius ** GAS_GIANT_DENSITY_FACTOR);
         }
         else if (planetRoll < FROZEN_GAS_DWARF_PROBABILITY) {
+            planetType = PlanetType.GAS_DWARF;
             mass = getRandomNumberInRange(GAS_DWARF_MASS_MIN_MAX);
             radius = Math.log10(10 * mass) + getRandomNumberInRange(GAS_DWARF_RADIUS_MIN_MAX);
             density = mass / (radius ** GAS_DWARF_DENSITY_FACTOR);
         }
         else if (planetRoll < FROZEN_TERRESTRIAL_PROBABILITY) {
+            planetType = PlanetType.TERRESTRIAL;
             mass = getRandomNumberInRange(TERRESTRIAL_MASS_MIN_MAX);
             density = getRandomNumberInRange(TERRESTRIAL_DENSITY_MIN_MAX);
             radius = (mass / density) ** (TERRESTRIAL_RADIUS_FACTOR);
         }
         else if (planetRoll < FROZEN_SUPER_EARTH_PROBABILITY) {
+            planetType = PlanetType.SUPER_EARTH;
             mass = getRandomNumberInRange(SUPER_EARTH_MASS_MIN_MAX);
             density = getRandomNumberInRange(SUPER_EARTH_DENSITY_MIN_MAX);
             radius = (mass / density) ** (SUPER_EARTH_RADIUS_FACTOR);
         }
         else if (planetRoll < FROZEN_BROWN_DWARF_PROBABILITY) {
+            planetType = PlanetType.BROWN_DWARF;
             mass = getRandomNumberInRange(BROWN_DWARF_MASS_MIN_MAX);
             radius = BROWN_DWARF_RADIUS_BASE - Math.random();
             density = mass / (radius ** BROWN_DWARF_DENSITY_FACTOR);
         }
         else { // if (planetRoll < FROZEN_ASTEROID_BELT_PROBABILITY) {
+            planetType = PlanetType.ASTEROID_BELT;
             mass = orbit * getRandomNumberInRange(ASTEROID_BELT_MASS_FACTOR_MIN_MAX);
             radius = 0;
             density = 0;
@@ -159,16 +177,19 @@ async function generatePlanet(system: System, orbit: number): Promise<Planet> {
         if(planetRoll < WARM_GAS_GIANT_PROBABILITY) {
             if(orbit < GAS_GIANT_INNER_LIMIT) //Too close to star, generating close in terrestrial
             {
+                planetType = PlanetType.TERRESTRIAL;
                 mass = getRandomNumberInRange(TERRESTRIAL_MASS_MIN_MAX);
                 density = getRandomNumberInRange(TERRESTRIAL_DENSITY_MIN_MAX);
                 radius = (mass / density) ** (TERRESTRIAL_RADIUS_FACTOR);
             }
             else if (orbit < HOT_JUPITER_DISTANCE) { //Hot Jupiter / Puffy Giant
+                planetType = PlanetType.HOT_JUPITER;
                 mass = getRandomNumberInRange(GAS_GIANT_MASS_MIN_MAX);
                 radius = Math.log10(10 * mass) + getRandomNumberInRange(HOT_JUPITER_RADIUS_MIN_MAX);
                 density = mass / (radius ** GAS_GIANT_DENSITY_FACTOR);
             }
             else {
+                planetType = PlanetType.GAS_GIANT;
                 mass = getRandomNumberInRange(GAS_GIANT_MASS_MIN_MAX);
                 radius = Math.log10(10 * mass) + getRandomNumberInRange(GAS_GIANT_RADIUS_MIN_MAX);
 
@@ -180,21 +201,25 @@ async function generatePlanet(system: System, orbit: number): Promise<Planet> {
             }
         }
         else if (planetRoll < WARM_TERRESTRIAL_PROBABILITY) {
+            planetType = PlanetType.TERRESTRIAL;
             mass = getRandomNumberInRange(TERRESTRIAL_MASS_MIN_MAX);
             density = getRandomNumberInRange(TERRESTRIAL_DENSITY_MIN_MAX);
             radius = (mass / density) ** (TERRESTRIAL_RADIUS_FACTOR);
         }
         else if (planetRoll < WARM_SUPER_EARTH_PROBABILITY) {
+            planetType = PlanetType.SUPER_EARTH;
             mass = getRandomNumberInRange(SUPER_EARTH_MASS_MIN_MAX);
             density = getRandomNumberInRange(SUPER_EARTH_DENSITY_MIN_MAX);
             radius = (mass / density) ** (SUPER_EARTH_RADIUS_FACTOR);
         }
         else if (planetRoll < WARM_ASTEROID_BELT_PROBABILITY) {
+            planetType = PlanetType.ASTEROID_BELT;
             mass = orbit * getRandomNumberInRange(ASTEROID_BELT_MASS_FACTOR_MIN_MAX);
             radius = 0;
             density = 0;
         }
         else { // if (planetRoll < WARM_BROWN_DWARF_PROBABILITY) {
+            planetType = PlanetType.BROWN_DWARF;
             mass = getRandomNumberInRange(BROWN_DWARF_MASS_MIN_MAX);
             radius = BROWN_DWARF_RADIUS_BASE - Math.random();
             density = mass / (radius ** BROWN_DWARF_DENSITY_FACTOR);            
@@ -224,6 +249,7 @@ async function generatePlanet(system: System, orbit: number): Promise<Planet> {
         eccentricity,
         planetID,
         planetName,
+        planetType,
         radius,
         surfaceArea,
         systemID: system.systemID,
@@ -238,6 +264,7 @@ export async function savePlanet(client: Client, message, planet: Planet): Promi
         galaxyID: message.galaxyID, 
         planetID: planet.planetID,
         planetName: planet.planetName,
+        planetType: planet.planetType,
         quadrantX: message.quadrantX,
         quadrantY: message.quadrantY,
         sectorX: message.sectorX,
@@ -253,7 +280,6 @@ export async function savePlanet(client: Client, message, planet: Planet): Promi
         surfaceArea: planet.surfaceArea,
         axialTilt: planet.axialTilt,
         averageTemperature: planet.averageTemperature,
-        starID: planet.starID,
         parentPlanetID: planet.parentPlanetID,
     }, everything]})).createPlanet;
 }

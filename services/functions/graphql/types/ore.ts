@@ -7,7 +7,6 @@ const OreType = builder
     fields: t => ({
       oreID: t.exposeID("oreID"),
       systemID: t.exposeString("systemID"),
-      parentObjectType: t.exposeString("parentObjectType"),
       parentObjectID: t.exposeString("parentObjectID"),
       oreType: t.exposeString("oreType"),
       depth: t.exposeFloat("depth"),
@@ -97,7 +96,6 @@ builder.mutationFields(t => ({
       subsectorX: t.arg.int({ required: true }),
       subsectorY: t.arg.int({ required: true }),
       systemID: t.arg.string({ required: true }),
-      parentObjectType: t.arg.string({ required: true }),
       parentObjectID: t.arg.string({ required: true }),
       oreType: t.arg.string({ required: true }),
       depth: t.arg.float({ required: true }),
@@ -113,7 +111,6 @@ builder.mutationFields(t => ({
       args.subsectorX, 
       args.subsectorY, 
       args.systemID,
-      args.parentObjectType,
       args.parentObjectID,
       args.oreType,
       args.depth,
