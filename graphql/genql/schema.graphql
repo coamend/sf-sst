@@ -11,8 +11,7 @@ type Mutation {
   createSector(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorName: String!, sectorX: Int!, sectorY: Int!): Sector!
   createStar(diameter: Float!, galaxyID: String!, luminosity: Float!, mass: Float!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, spectralClass: String!, starName: String!, subsectorX: Int!, subsectorY: Int!, surfaceTemperature: Float!, systemID: String!): Star!
   createSubsector(galaxyID: String!, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, subsectorName: String!, subsectorX: Int!, subsectorY: Int!): Subsector!
-  createSystem(barycenter: Float, binaryAverageDistance: Float, binaryEccentricity: Float, binaryMaximumDistance: Float, binaryMinimumDistance: Float, forbiddenZoneInner: Float, forbiddenZoneOuter: Float, frostLine: Float, galaxyID: String!, habitableZoneInner: Float, habitableZoneOuter: Float, innerOrbitLimit: Float, outerOrbitLimit: Float, parentSystemID: String, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, subsectorX: Int!, subsectorY: Int!, systemName: String!): System!
-  updateSystem(barycenter: Float, binaryAverageDistance: Float, binaryEccentricity: Float, binaryMaximumDistance: Float, binaryMinimumDistance: Float, forbiddenZoneInner: Float, forbiddenZoneOuter: Float, frostLine: Float, galaxyID: String!, habitableZoneInner: Float, habitableZoneOuter: Float, innerOrbitLimit: Float, outerOrbitLimit: Float, systemID: String!, systemName: String!): System!
+  createSystem(barycenter: Float, binaryAverageDistance: Float, binaryEccentricity: Float, binaryMaximumDistance: Float, binaryMinimumDistance: Float, forbiddenZoneInner: Float, forbiddenZoneOuter: Float, frostLine: Float, galaxyID: String!, habitableZoneInner: Float, habitableZoneOuter: Float, innerOrbitLimit: Float, outerOrbitLimit: Float, parentSystemID: String, quadrantX: Int!, quadrantY: Int!, sectorX: Int!, sectorY: Int!, solarRadiusAverage: Float!, solarTemperatureTotal: Float!, subsectorX: Int!, subsectorY: Int!, systemID: String, systemName: String!, systemSolarMass: Float!): System!
 }
 
 type Ore {
@@ -115,6 +114,9 @@ type System {
   innerOrbitLimit: Float
   outerOrbitLimit: Float
   parentSystemID: String
+  solarRadiusAverage: Float!
+  solarTemperatureTotal: Float!
   systemID: ID!
   systemName: String!
+  systemSolarMass: Float!
 }

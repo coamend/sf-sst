@@ -2,6 +2,7 @@ export * as System from "./system";
 import { Dynamo } from "./dynamo";
 import { Entity, EntityItem } from "electrodb";
 import { ulid } from "ulid";
+import { NumberType } from "aws-sdk/clients/pinpointsmsvoicev2";
 
 export const SystemEntity = new Entity(
   {
@@ -62,6 +63,24 @@ export const SystemEntity = new Entity(
       systemName: {
         type: "string",
         required: true,
+      },
+      systemSolarMass: {
+        type: "number",
+        label: "mass",
+        required: true,
+        readOnly: true,
+      },
+      solarRadiusAverage: {
+        type: "number",
+        label: "radii",
+        required: true,
+        readOnly: true,
+      },
+      solarTemperatureTotal: {
+        type: "number",
+        label: "temp",
+        required: true,
+        readOnly: true,
       },
       parentSystemID: {
         type: "string",
@@ -153,6 +172,9 @@ export function create(
   subsectorX: number, 
   subsectorY: number, 
   systemName: string, 
+  systemSolarMass: number,
+  solarRadiusAverage: number,
+  solarTemperatureTotal: number,
   systemID?: string,
   parentSystemID?: string,
   binaryMinimumDistance?: number,
@@ -187,6 +209,9 @@ export function create(
     subsectorY,
     systemID,
     systemName,
+    systemSolarMass,
+    solarRadiusAverage,
+    solarTemperatureTotal,
     parentSystemID,
     binaryMinimumDistance,
     binaryAverageDistance,

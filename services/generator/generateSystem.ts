@@ -1,6 +1,4 @@
-import { Client, createClient, System, Star, everything } from "../../graphql/genql";
-import { generateName } from "./generateName";
-import { generateStar } from "./generateStar";
+import { Client, System, Star, everything } from "../../graphql/genql";
 import { ulid } from "ulid";
 import { getRandomNumberInRange } from "./getRandomNumberInRange";
 
@@ -17,6 +15,8 @@ const HABITABLE_ZONE_OUTER_MULTIPLE: number = 1.37;
 export async function generateSystem(systemName: string, star1: Star, star2?: Star, star3?: Star, star4?: Star, parentSystemID?: string): Promise<System> {
     let totalMass = star1.mass + (star2?.mass?? 0) + (star3?.mass?? 0) + (star4?.mass?? 0);
     let luminositySqrt = Math.sqrt(star1.luminosity + (star2?.luminosity?? 0) + (star3?.luminosity?? 0) + (star4?.luminosity?? 0));
+    let solarRadiusAverage: number;
+    let solarTemperatureTotal = star1.surfaceTemperature + (star2?.surfaceTemperature?? 0) + (star3?.surfaceTemperature?? 0) + (star4?.surfaceTemperature?? 0);
     let binaryMinimumDistance, binaryAverageDistance, binaryMaximumDistance, barycenter, binaryEccentricity, frostLine, 
         forbiddenZoneInner, forbiddenZoneOuter, innerOrbitLimit, outerOrbitLimit, habitableZoneInner, habitableZoneOuter;
 
@@ -25,6 +25,13 @@ export async function generateSystem(systemName: string, star1: Star, star2?: St
         {
             //calculate trinary/quad stuff here
             binaryAverageDistance = getRandomNumberInRange(MULTI_SYSTEM_DIST_MIN_MAX);
+
+            if(typeof star4 != undefined) {
+                solarRadiusAverage = ((star1.diameter / 2) + (star2?.diameter??0 / 2) + (star3?.diameter??0 / 2) + (star4?.diameter??0 / 2) / (4));
+            }
+            else {
+                solarRadiusAverage = ((star1.diameter / 2) + (star2?.diameter??0 / 2) + (star3?.diameter??0 / 2) / (3));
+            }
 
             if(star1.mass + (star2?.mass??0) >= (star3?.mass??0) + (star4?.mass??0)){
                 barycenter = binaryAverageDistance * ((star3?.mass??0) + (star4?.mass??0) / (star1.mass + (star2?.mass??0) + (star3?.mass??0) + (star4?.mass??0)));
@@ -38,6 +45,8 @@ export async function generateSystem(systemName: string, star1: Star, star2?: St
         {
             //calculate binary stuff here
             binaryAverageDistance = getRandomNumberInRange(BINARY_AVG_DIST_MIN_MAX);
+
+            solarRadiusAverage = ((star1.diameter / 2) + (star2?.diameter??0 / 2) / (2));
 
             if(star1.mass >= (star2?.mass??0)){
                 barycenter = binaryAverageDistance * ((star2?.mass??0) / (star1.mass + (star2?.mass??0)));
@@ -59,6 +68,9 @@ export async function generateSystem(systemName: string, star1: Star, star2?: St
 
         forbiddenZoneInner = binaryMinimumDistance / FORBIDDEN_ZONE_MULTIPLE;
         forbiddenZoneOuter = binaryMaximumDistance * FORBIDDEN_ZONE_MULTIPLE;
+    }
+    else {
+        solarRadiusAverage = star1.diameter / 2;
     }
 
     innerOrbitLimit = totalMass * INNER_ORBIT_LIMIT_MULTIPLE;
@@ -85,7 +97,10 @@ export async function generateSystem(systemName: string, star1: Star, star2?: St
     
     let system: System = {
         systemID: ulid(),
+        solarRadiusAverage,
+        solarTemperatureTotal,
         systemName,
+        systemSolarMass: totalMass,        
         parentSystemID,
         binaryAverageDistance,
         barycenter,
@@ -108,7 +123,11 @@ export async function generateSystem(systemName: string, star1: Star, star2?: St
 export async function saveSystem(client: Client, message, system: System): Promise<System> {
     return (await client.mutation({createSystem: [{ 
         galaxyID: message.galaxyID, 
+        systemID: system.systemID,
         systemName: system.systemName,
+        systemSolarMass: system.systemSolarMass,
+        solarRadiusAverage: system.solarRadiusAverage,
+        solarTemperatureTotal: system.solarTemperatureTotal,
         quadrantX: message.quadrantX,
         quadrantY: message.quadrantY,
         sectorX: message.sectorX,

@@ -380,6 +380,14 @@ export default {
                         5,
                         "Int!"
                     ],
+                    "solarRadiusAverage": [
+                        4,
+                        "Float!"
+                    ],
+                    "solarTemperatureTotal": [
+                        4,
+                        "Float!"
+                    ],
                     "subsectorX": [
                         5,
                         "Int!"
@@ -388,62 +396,16 @@ export default {
                         5,
                         "Int!"
                     ],
-                    "systemName": [
-                        2,
-                        "String!"
-                    ]
-                }
-            ],
-            "updateSystem": [
-                13,
-                {
-                    "barycenter": [
-                        4
-                    ],
-                    "binaryAverageDistance": [
-                        4
-                    ],
-                    "binaryEccentricity": [
-                        4
-                    ],
-                    "binaryMaximumDistance": [
-                        4
-                    ],
-                    "binaryMinimumDistance": [
-                        4
-                    ],
-                    "forbiddenZoneInner": [
-                        4
-                    ],
-                    "forbiddenZoneOuter": [
-                        4
-                    ],
-                    "frostLine": [
-                        4
-                    ],
-                    "galaxyID": [
-                        2,
-                        "String!"
-                    ],
-                    "habitableZoneInner": [
-                        4
-                    ],
-                    "habitableZoneOuter": [
-                        4
-                    ],
-                    "innerOrbitLimit": [
-                        4
-                    ],
-                    "outerOrbitLimit": [
-                        4
-                    ],
                     "systemID": [
-                        2,
-                        "String!"
+                        2
                     ],
                     "systemName": [
                         2,
                         "String!"
+                    ],
+                    "systemSolarMass": [
+                        4,
+                        "Float!"
                     ]
                 }
             ],
@@ -1219,11 +1181,20 @@ export default {
             "parentSystemID": [
                 2
             ],
+            "solarRadiusAverage": [
+                4
+            ],
+            "solarTemperatureTotal": [
+                4
+            ],
             "systemID": [
                 1
             ],
             "systemName": [
                 2
+            ],
+            "systemSolarMass": [
+                4
             ],
             "__typename": [
                 2
