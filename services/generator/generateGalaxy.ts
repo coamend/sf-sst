@@ -13,13 +13,6 @@ interface galaxyGenerationOpts {
     subsectorSizeY?: number,
     systemFrequency?: number,
 }
-
-interface quadrantGenerationOpts {
-    galaxyId: string, 
-    quadrantName: string,
-    quadrantX: number,
-    quadrantY: number,
-}
    
 export async function main(
     params: galaxyGenerationOpts
@@ -53,7 +46,7 @@ export async function main(
 
                             client.mutation({createSubsector: [{ galaxyID, quadrantX, quadrantY, sectorX, sectorY, subsectorName, subsectorX, subsectorY}, {}]});
 
-                            if(Math.random() <= params.systemFrequency)
+                            if((1 - Math.random()) <= params.systemFrequency)
                             {
                                 var que = new SQS({ apiVersion: '2012-11-05' });
                                 que.sendMessage({

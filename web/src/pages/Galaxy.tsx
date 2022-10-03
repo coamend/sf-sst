@@ -44,7 +44,7 @@ export function ListGalaxies() {
           <li>
             <div>
               <div>
-                {galaxy.galaxyName} - <a href={galaxy.galaxyID}>{galaxy.galaxyID}</a>
+                <a href={galaxy.galaxyID}>{galaxy.galaxyName} - {galaxy.galaxyID}</a>
               </div>
             </div>
           </li>
