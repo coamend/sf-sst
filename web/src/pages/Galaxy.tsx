@@ -32,7 +32,7 @@ export function ListGalaxies() {
   return (
     <div style={{ padding: "1rem" }}>
       <h2>Galaxies</h2>
-      <h3>Submit</h3>
+      <h3>Generate</h3>
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -62,7 +62,7 @@ export function ListGalaxies() {
         <input name="systemFrequency" placeholder="System Frequency"/>
         <button type="submit">Submit</button>
       </form>
-      <h3>Latest</h3>
+      <h3>All Galaxies</h3>
       <ol>
         {galaxies.data?.galaxies.map(galaxy => (
           <li>

@@ -34,6 +34,7 @@ export function Generator({ stack }: StackContext) {
               timeout: 60,
               environment: {
                 SYSTEM_GENERATION_QUEUE: systemGenerationQueue.queueUrl,
+                GALAXY_GENERATION_STATUS_TOPIC: "galaxyGeneration/status",
                 GRAPHQL_URL: api.url + "/graphql"
               }
           }

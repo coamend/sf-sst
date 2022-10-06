@@ -1,9 +1,11 @@
 import { createClient } from "../../graphql/genql";
 import { intToRomanNumeral } from "./intToRomanNumeral";
 import { generateName, generateGreekPlusNumber } from "./generateName";
+import { CargoplaneCloud } from '@cargoplane/cloud';
+import { galaxyGenerationStatusMessage } from "./galaxyGenerationStatusMessage";
 import { SQS } from "aws-sdk";
 
-interface galaxyGenerationOpts {
+export interface galaxyGenerationOpts {
     galaxyName: string, 
     quadrantSizeX?: number,
     quadrantSizeY?: number,
@@ -27,7 +29,9 @@ export async function main(
 
     let client = createClient({ url: process.env.GRAPHQL_URL });
     let galaxyID = (await client.mutation({createGalaxy: [{ galaxyName: params.galaxyName }, { galaxyID: true }]})).createGalaxy.galaxyID;
-    
+    let systemCount = 0;
+    const carogplane = new CargoplaneCloud();
+
     for(let quadrantY = 1;quadrantY <= params.quadrantSizeY; quadrantY++){
         for(let quadrantX = 1;quadrantX <= params.quadrantSizeX; quadrantX++){
             let quadrantName: string = intToRomanNumeral(quadrantX + (quadrantY * params.quadrantSizeX));
@@ -65,12 +69,13 @@ export async function main(
                                         'sectorName': sectorName,
                                         'subsectorName': subsectorName,
                                     }),
-                                    QueueUrl: process.env.SYSTEM_GENERATION_QUEUE ?? '',
+                                    QueueUrl: process.env.SYSTEM_GENERATION_QUEUE!,
                                 }, function(err, data) {
                                     if (err) {
                                         console.log("Error while attempting to queue system generation message", err);
                                     } else {
                                         console.log("Queue System Generation Message Success", data.MessageId);
+                                        systemCount++;
                                     }
                                 });
                             }
@@ -81,5 +86,14 @@ export async function main(
         }
     }  
     
+    let message:galaxyGenerationStatusMessage = {
+        msgType: "GalaxyGeneration",
+        body: {
+            galaxyID: galaxyID,
+            generatedSystemCount: systemCount
+        }
+    }
+    carogplane.publish(process.env.GALAXY_GENERATION_STATUS_TOPIC!, message);
+
     return galaxyID;
 };

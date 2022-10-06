@@ -14,6 +14,7 @@ export function Api({ stack }: StackContext) {
         permissions: [db],
         environment: {
           TABLE_NAME: db.tableName,
+          GALAXY_GENERATION_TOPIC: "galaxyGeneration/*"
         },
       },
     }, 
@@ -28,6 +29,12 @@ export function Api({ stack }: StackContext) {
         commands: [
           "npx genql --output ./graphql/genql --schema ./graphql/schema.graphql --esm",
         ],
+      },
+      "POST /getCredentials": {
+        function: {
+          handler: "generator/getCredentials.handler",
+          permissions: ["iot"]
+        },
       },
     },
   });

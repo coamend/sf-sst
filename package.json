@@ -28,6 +28,7 @@
     "graphql": "16.5.0"
   },
   "dependencies": {
+    "@cargoplane/cloud": "^1.0.2",
     "@pothos/plugin-smart-subscriptions": "^3.6.4",
     "aws-amplify": "^4.3.35"
   }

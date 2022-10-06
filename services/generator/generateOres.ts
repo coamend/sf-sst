@@ -1,5 +1,5 @@
 import { ulid } from "ulid";
-import { Ore, Planet } from "../../graphql/genql";
+import { Client, everything, Ore, Planet } from "../../graphql/genql";
 import { getRandomNumberInRange } from "./getRandomNumberInRange";
 import { PlanetType } from "./generatePlanets";
 
@@ -98,4 +98,22 @@ async function generateOre(planet: Planet, mineral: string, quantity: number): P
         __typename: "Ore"
     }
     return ore;
+}
+
+export async function saveOre(client: Client, message, ore: Ore): Promise<Ore> {
+    return (await client.mutation({createOre: [{
+        galaxyID: message.galaxyID,
+        quadrantX: message.quadrantX,
+        quadrantY: message.quadrantY,
+        sectorX: message.sectorX,
+        sectorY: message.sectorY,
+        subsectorX: message.subsectorX,
+        subsectorY: message.subsectorY,
+        systemID: ore.systemID,
+        parentObjectID: ore.parentObjectID,
+        oreType: ore.oreType,
+        depth: ore.depth,
+        size: ore.size,
+        stripRatio: ore.stripRatio,
+    }, everything]})).createOre;
 }
