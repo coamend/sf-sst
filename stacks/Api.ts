@@ -33,7 +33,7 @@ export function Api({ stack }: StackContext) {
       "POST /getCredentials": {
         function: {
           handler: "generator/getCredentials.handler",
-          permissions: ["iot"]
+          permissions: ["iot", "sts:AssumeRole"]
         },
       },
     },

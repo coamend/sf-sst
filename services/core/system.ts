@@ -153,7 +153,7 @@ export const SystemEntity = new Entity(
         },
         sk: {
           field: "gsi1sk",
-          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX, subsectorY", "parentSystemID"],
+          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX", "subsectorY", "parentSystemID"],
         }
       }
     },

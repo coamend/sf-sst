@@ -77,7 +77,7 @@ export const SubsectorEntity = new Entity(
         },
         sk: {
           field: "gsi1sk",
-          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX, subsectorY"],
+          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX", "subsectorY"],
         }
       }
     },

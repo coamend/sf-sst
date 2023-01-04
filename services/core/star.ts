@@ -111,7 +111,7 @@ export const StarEntity = new Entity(
         },
         sk: {
           field: "gsi1sk",
-          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX, subsectorY", "systemID"],
+          composite: ["quadrantX", "quadrantY", "sectorX", "sectorY", "subsectorX", "subsectorY", "systemID"],
         }
       }
     },
