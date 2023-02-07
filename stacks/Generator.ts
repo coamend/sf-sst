@@ -2,7 +2,7 @@ import {
     StackContext,
     use,
     Queue,
-  } from "@serverless-stack/resources";
+  } from "sst/constructs";
 import { Api } from "./Api";
   
 export function Generator({ stack }: StackContext) {
@@ -11,11 +11,11 @@ export function Generator({ stack }: StackContext) {
   const systemGenerationQueue = new Queue(stack, "systemGenerationQueue", {
     consumer: {
         function: {
-            handler: "generator/generateSystemHandler.main",
+            handler: "services/generator/generateSystemHandler.main",
             timeout: 20,
             environment: {
               GRAPHQL_URL: api.url + "/graphql",
-              MULTI_STAR_SYSYEM_PROBABILITY: '0.08',
+              MULTI_STAR_SYSYEM_PROBABILITY: '0.3',
               P_TYPE_MULTI_SYSTEM_PROBABILITY: '0.5',
             }
         },
@@ -30,7 +30,7 @@ export function Generator({ stack }: StackContext) {
   api.addRoutes(stack, {
         "POST /generateGalaxy": {
           function: {
-              handler: "generator/generateGalaxy.main",
+              handler: "services/generator/generateGalaxy.main",
               timeout: 60,
               environment: {
                 SYSTEM_GENERATION_QUEUE: systemGenerationQueue.queueUrl,

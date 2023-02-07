@@ -5,10 +5,10 @@ export async function handler() {
     let sts = new AWS.STS();
     let roleName;
 
-    await sts.getCallerIdentity({}, function(err, data) {
-        if(err) console.log(err);
+    sts.getCallerIdentity({}, function(err, data) {
+        if(err) console.log('Failed to get identity - ' + err);
         else { console.log(data); roleName = JSON.stringify(data).split("/")[1]; }
-    }).promise();
+    });
 
     let credConfig: CargoplaneCredentialRequest = {
         roleName: roleName,

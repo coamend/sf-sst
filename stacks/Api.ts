@@ -2,7 +2,7 @@ import {
   StackContext,
   use,
   Api as ApiGateway,
-} from "@serverless-stack/resources";
+} from "sst/constructs";
 import { Database } from "./Database";
 
 export function Api({ stack }: StackContext) {
@@ -11,7 +11,7 @@ export function Api({ stack }: StackContext) {
   const api = new ApiGateway(stack, "api", {
     defaults: {
       function: {
-        permissions: [db],
+        bind: [db],
         environment: {
           TABLE_NAME: db.tableName,
           GALAXY_GENERATION_TOPIC: "galaxyGeneration/*"
@@ -20,19 +20,21 @@ export function Api({ stack }: StackContext) {
     }, 
     routes: {
       "POST /graphql": {
-        type: "pothos",
+        type: "graphql",
         function: {
-          handler: "functions/graphql/graphql.handler",
+          handler: "services/functions/graphql/graphql.handler",
         },
-        schema: "services/functions/graphql/schema.ts",
-        output: "graphql/schema.graphql",
-        commands: [
-          "npx genql --output ./graphql/genql --schema ./graphql/schema.graphql --esm",
-        ],
+        pothos: {
+          schema: "services/functions/graphql/schema.ts",
+          output: "graphql/schema.graphql",
+          commands: [
+            "npx genql --output ./graphql/genql --schema ./graphql/schema.graphql --esm",
+          ],
+        },
       },
       "POST /getCredentials": {
         function: {
-          handler: "generator/getCredentials.handler",
+          handler: "services/generator/getCredentials.handler",
           permissions: ["iot", "sts:AssumeRole"]
         },
       },
