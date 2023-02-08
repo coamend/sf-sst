@@ -14,7 +14,8 @@ export function Api({ stack }: StackContext) {
         bind: [db],
         environment: {
           TABLE_NAME: db.tableName,
-          GALAXY_GENERATION_TOPIC: "galaxyGeneration/*"
+          GALAXY_GENERATION_TOPIC: "galaxyGeneration/*",
+          PUB_SUB_ROLE_NAME: 'sf-iot-cargoplane-role',
         },
       },
     }, 

@@ -1,14 +1,7 @@
 import {CargoplaneCloud, CargoplaneCredentialRequest} from '@cargoplane/cloud';
-import AWS from "aws-sdk";
 
 export async function handler() {
-    let sts = new AWS.STS();
-    let roleName;
-
-    sts.getCallerIdentity({}, function(err, data) {
-        if(err) console.log('Failed to get identity - ' + err);
-        else { console.log(data); roleName = JSON.stringify(data).split("/")[1]; }
-    });
+    let roleName = process.env.PUB_SUB_ROLE_NAME!;
 
     let credConfig: CargoplaneCredentialRequest = {
         roleName: roleName,

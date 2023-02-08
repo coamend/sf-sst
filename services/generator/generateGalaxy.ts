@@ -1,7 +1,7 @@
 import { createClient } from "../../graphql/genql";
 import { intToRomanNumeral } from "./intToRomanNumeral";
 import { generateName, generateGreekPlusNumber } from "./generateName";
-import { CargoplaneCloud } from '@cargoplane/cloud';
+import { publishStatusMessage } from './publishStatusMessage';
 import { galaxyGenerationStatusMessage } from "./galaxyGenerationStatusMessage";
 import { SQS } from "aws-sdk";
 
@@ -30,7 +30,6 @@ export async function main(
     let client = createClient({ url: process.env.GRAPHQL_URL });
     let galaxyID = (await client.mutation({createGalaxy: [{ galaxyName: params.galaxyName }, { galaxyID: true }]})).createGalaxy.galaxyID;
     let systemCount = 0;
-    const carogplane = new CargoplaneCloud();
 
     for(let quadrantY = 1;quadrantY <= params.quadrantSizeY; quadrantY++){
         for(let quadrantX = 1;quadrantX <= params.quadrantSizeX; quadrantX++){
@@ -93,7 +92,7 @@ export async function main(
             generatedSystemCount: systemCount
         }
     }
-    carogplane.publish(process.env.GALAXY_GENERATION_STATUS_TOPIC!, message);
+    publishStatusMessage(message);
 
     return galaxyID;
 };

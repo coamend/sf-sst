@@ -7,7 +7,7 @@ import { generatePlanets, savePlanet } from "./generatePlanets";
 import { generateMoons } from "./generateMoons";
 import { generateOres, saveOre } from "./generateOres";
 import { galaxyGenerationStatusMessage } from "./galaxyGenerationStatusMessage";
-import { CargoplaneCloud } from "@cargoplane/cloud";
+import { publishStatusMessage } from "./publishStatusMessage";
 
 export async function main(event: SQSEvent) {
     const batchItemFailures = new Array;
@@ -47,7 +47,6 @@ async function processMessage(message) {
     let planets = new Array<Planet>;
     let ores = new Array<Ore>;
     let systemName = generateName();
-    const carogplane = new CargoplaneCloud();
     
     try{
         if(Math.random() <= Number(process.env.MULTI_STAR_SYSTEM_PROBABILITY))
@@ -196,7 +195,7 @@ async function processMessage(message) {
                 systems: systems,
             }
         }
-        carogplane.publish(process.env.GALAXY_GENERATION_STATUS_TOPIC!, msg);
+        publishStatusMessage(msg);
     }
     catch (e) {
         console.log("Failed to generate system: %j", message );
