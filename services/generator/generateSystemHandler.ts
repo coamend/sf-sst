@@ -14,18 +14,18 @@ export async function main(event: SQSEvent) {
 
     await Promise.allSettled(
         event.Records.map(async (record: SQSRecord) => {
-        const body = record.body;
-        try {
-            processMessage(body);
-        }
-        catch(e) {
-          console.log(`Error while generating system: ${body}`);
-          batchItemFailures.push({itemIdentifier: record.messageId});
-        }
-      })
+            const body = record.body;
+            try {
+                processMessage(body);
+            }
+            catch(e) {
+                console.log(`Error while generating system: ${body}`);
+                batchItemFailures.push({itemIdentifier: record.messageId});
+            }
+        })
     );
 
-    console.log('Successfully created ' + event.Records.length.toString() + ' systems');
+    console.log('Successfully created ' + (event.Records.length - batchItemFailures.length) + ' systems');
 
     return {batchItemFailures};
 };
